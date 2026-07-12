@@ -7498,6 +7498,34 @@
     "zh": "${...} 已完成"
   },
   {
+    "en": "${...} awaiting input",
+    "zh": "${...} 等待输入"
+  },
+  {
+    "en": "${...} working",
+    "zh": "${...} 工作中"
+  },
+  {
+    "en": "Needs input",
+    "zh": "需要输入"
+  },
+  {
+    "en": "No response requested.",
+    "zh": "未请求回复。"
+  },
+  {
+    "en": "describe a task for a new session",
+    "zh": "描述任务，开启新会话"
+  },
+  {
+    "en": "A different way to work with Claude: hand off a bigger task than you would chat through, and Claude organizes it in the sections above so you know when it needs you.",
+    "zh": "换一种与 Claude 协作的方式：把比日常对话更大的任务交给它，Claude 会在上方分区整理任务状态，需要你介入时一目了然。"
+  },
+  {
+    "en": "/bg detaches this session to run in the background, and `claude agents` shows every backgrounded session in one table with a status color \\u2014 glance to see which ones need you, space to reply, enter to attach.",
+    "zh": "/bg 会把当前会话转到后台继续运行；`claude agents` 用一张带状态颜色的表格展示所有后台会话——扫一眼就知道哪些需要你，按 space 回复，按 enter 接管。"
+  },
+  {
     "en": " tasks (",
     "zh": " 个任务（"
   },

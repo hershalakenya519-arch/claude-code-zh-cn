@@ -14,6 +14,7 @@
 - `detect` 将带 Bun trailer 的 ELF 识别为 `native-bun`；`check-deps` 支持传入目标二进制路径，ELF 直接判定依赖满足。
 - 支持窗口新增 `linuxNativeExperimental`（floor 2.1.113，无已发布验证窗口）：Linux 可识别版本一律走安装时本机 provisional 自验证，补丁、重打包或 `--version` 启动自检失败自动保留/恢复英文原版，与 macOS/Windows 同一套优雅降级契约。
 - 版本探测兼容 2.1.207 起的新头部布局（`@bun` pragma 在前，`// Version:` 靠后，扫描窗口放宽到 4096 字节），并识别 `@anthropic-ai/claude-code-linux-*` 系列包名。
+- 补翻 `claude agents` 后台任务面板（2.1.2xx 新界面）：头部计数（等待输入 / 工作中）、Needs input 状态、No response requested 详情、新任务输入占位符、面板说明段、/bg 功能提示，共 7 条（UI 翻译 1895 → 1902）；已实测不误伤内嵌模型文档中的同词短语。
 
 ### 改进
 
