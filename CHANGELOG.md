@@ -18,12 +18,12 @@
 ### 改进
 
 - doctor 在 Linux 上正确报告 native 平台（linux-x64 / linux-arm64）与支持判定。
-- 实测证据：linux-x64 2.1.207 真机冒烟通过（1395 处硬编码文字 patch，`--version` 自检 + `--help` 中文显示；字节码缓存因源码变更自动失效回退源码执行，启动时间约 +0.6s）。
+- 实测证据：linux-x64 2.1.207 真机冒烟通过（1395 处硬编码文字 patch，`--version` 自检 + `--help` 中文显示；字节码缓存因源码变更自动失效回退源码执行，启动时间约 +0.6s）；linux-arm64 2.1.206（Android Termux proot glibc 容器，npm pack 手动解包布局 `/opt/claudebin`）真机安装通过（同样 1395 处 patch + `--version` 自检）。
 
 ### 已知边界
 
 - Linux 补丁后首次启动需重新解析 19MB 内嵌源码（预编译字节码失效），冷启动变慢属预期行为；卸载或从备份恢复即回到原速。
-- Termux proot（Android aarch64）为推断支持：ELF 手术与自检逻辑平台无关，但尚无真机公开证据，失败会自动降级英文。
+- Termux proot（Android aarch64）已有真机安装证据（2.1.206，见上），但仍属 provisional 自验证范畴：每台设备安装时独立自检，失败自动降级英文。
 
 ## [2.6.0] - 2026-07-10
 
