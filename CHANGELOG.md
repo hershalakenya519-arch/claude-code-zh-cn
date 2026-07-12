@@ -18,6 +18,8 @@
 
 ### 改进
 
+- **native 二进制的备份还原全部改为原子替换**（临时文件 + rename）：慢设备上 255MB 的 `cp` 需要数十秒，期间并发启动的 claude 会映射到写了一半的文件（Bus error）；rename 保证任何时刻启动拿到的都是完整文件。覆盖 install.sh / session-start hook / uninstall.sh 三处。
+- 安装器在打翻译补丁与写回二进制前输出进度与预计耗时（慢设备 1~5 分钟），并明确提示期间勿启动 Claude Code——此前 extract 成功后长时间静默，容易被误判为已完成。
 - doctor 在 Linux 上正确报告 native 平台（linux-x64 / linux-arm64）与支持判定。
 - 实测证据：linux-x64 2.1.207 真机冒烟通过（1395 处硬编码文字 patch，`--version` 自检 + `--help` 中文显示；字节码缓存因源码变更自动失效回退源码执行，启动时间约 +0.6s）；linux-arm64 2.1.206（Android Termux proot glibc 容器，npm pack 手动解包布局 `/opt/claudebin`）真机安装通过（同样 1395 处 patch + `--version` 自检）。
 

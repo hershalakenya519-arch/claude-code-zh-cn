@@ -1605,6 +1605,20 @@ patch_npm_cli() {
     fi
 }
 
+# 原子替换二进制：先写临时文件再 rename。
+# 慢设备上 255MB 的 cp 要数十秒，期间若启动 claude 会映射到写了一半的文件（Bus error）；
+# rename 是原子操作，任何时刻启动拿到的都是完整文件。
+atomic_replace_binary() {
+    local src="$1"
+    local dst="$2"
+    local tmp="${dst}.zh-cn-swap.$$"
+    if cp "$src" "$tmp" 2>/dev/null && mv -f "$tmp" "$dst" 2>/dev/null; then
+        return 0
+    fi
+    rm -f "$tmp" 2>/dev/null || true
+    return 1
+}
+
 patch_native_binary() {
     local binary_path="$1"
     local tmp_js="${TMPDIR:-/tmp}/claude-zh-cn-extract.$$.js"
@@ -1657,7 +1671,7 @@ patch_native_binary() {
     # 备份逻辑：仅同版本恢复 backup；版本变化时刷新 backup 为当前版本
     if [ -f "$backup_path" ] && [ -n "${current_version:-}" ] && [ "${current_version:-}" = "${backup_version:-}" ]; then
         echo -e "  从备份恢复原始二进制..."
-        cp "$backup_path" "$binary_path" || {
+        atomic_replace_binary "$backup_path" "$binary_path" || {
             echo -e "${RED}恢复备份失败${NC}"
             return
         }
@@ -1680,12 +1694,14 @@ patch_native_binary() {
     }
 
     local patch_count
+    echo -e "  正在打翻译补丁（视设备性能约 1~5 分钟，期间请勿启动 Claude Code）..."
     patch_count=$("$PLUGIN_SRC/patch-cli.sh" "$tmp_js" 2>/dev/null || echo "0")
 
     if [ "$patch_count" != "0" ]; then
+        echo -e "  正在写回二进制（大文件读写，需要一会儿）..."
         node "$PLUGIN_SRC/bun-binary-io.js" repack "$binary_path" "$tmp_js" || {
             echo -e "${RED}写回二进制失败，正在从备份恢复...${NC}"
-            cp "$backup_path" "$binary_path" 2>/dev/null || true
+            atomic_replace_binary "$backup_path" "$binary_path" || true
             CLI_PATCH_STATUS_SUMMARY="已跳过（原生二进制写回失败）"
             rm -f "$tmp_js"
             return
@@ -1695,7 +1711,7 @@ patch_native_binary() {
         verified_version="$(native_binary_version_from_execution "$binary_path")"
         if [ "${verified_version:-}" != "${current_version:-}" ]; then
             echo -e "${RED}本机启动自检失败，正在从备份恢复...${NC}"
-            cp "$backup_path" "$binary_path" 2>/dev/null || true
+            atomic_replace_binary "$backup_path" "$binary_path" || true
             CLI_PATCH_STATUS_SUMMARY="已跳过（原生二进制本机启动自检失败）"
             rm -f "$tmp_js"
             return
