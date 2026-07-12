@@ -6,6 +6,25 @@
 - **次版本号**：新增功能或显著改进（比如新增 patch、新增翻译）
 - **修订号**：Bug 修复和小调整（比如修正一条翻译）
 
+## [2.7.0] - 2026-07-12
+
+### 新增
+
+- **Linux ELF native 二进制支持（Layer 4 CLI Patch 打通）**：Bun 在 Linux 上把 standalone 数据放在正规 ELF 节 `.bun` 里，本版实现纯 JS 的节手术——提取内嵌 JS → 翻译 → 写回并整体平移节后内容（按 65536 对齐，同步修正 ELF 头 / 节头表 / 程序头表），**不需要 node-lief**。适用于官方安装器与 npm ≥2.1.113 原生 wrapper（含 npm pack 手动解包布局），x64 / arm64 通用。
+- `detect` 将带 Bun trailer 的 ELF 识别为 `native-bun`；`check-deps` 支持传入目标二进制路径，ELF 直接判定依赖满足。
+- 支持窗口新增 `linuxNativeExperimental`（floor 2.1.113，无已发布验证窗口）：Linux 可识别版本一律走安装时本机 provisional 自验证，补丁、重打包或 `--version` 启动自检失败自动保留/恢复英文原版，与 macOS/Windows 同一套优雅降级契约。
+- 版本探测兼容 2.1.207 起的新头部布局（`@bun` pragma 在前，`// Version:` 靠后，扫描窗口放宽到 4096 字节），并识别 `@anthropic-ai/claude-code-linux-*` 系列包名。
+
+### 改进
+
+- doctor 在 Linux 上正确报告 native 平台（linux-x64 / linux-arm64）与支持判定。
+- 实测证据：linux-x64 2.1.207 真机冒烟通过（1395 处硬编码文字 patch，`--version` 自检 + `--help` 中文显示；字节码缓存因源码变更自动失效回退源码执行，启动时间约 +0.6s）。
+
+### 已知边界
+
+- Linux 补丁后首次启动需重新解析 19MB 内嵌源码（预编译字节码失效），冷启动变慢属预期行为；卸载或从备份恢复即回到原速。
+- Termux proot（Android aarch64）为推断支持：ELF 手术与自检逻辑平台无关，但尚无真机公开证据，失败会自动降级英文。
+
 ## [2.6.0] - 2026-07-10
 
 ### 新增

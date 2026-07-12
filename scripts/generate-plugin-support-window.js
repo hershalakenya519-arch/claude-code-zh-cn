@@ -56,6 +56,7 @@ function buildSupportWindow(config) {
   const macosOfficial = config.support?.macosOfficialInstaller?.experimental || null;
   const macosNative = config.support?.macosNativeExperimental || null;
   const windowsNative = config.support?.windowsNativeExperimental || null;
+  const linuxNative = config.support?.linuxNativeExperimental || null;
 
   const payload = {
     legacyNpmStable: {
@@ -96,6 +97,18 @@ function buildSupportWindow(config) {
       platform: windowsNative.platform || "win32-x64",
       packageName: windowsNative.packageName || "@anthropic-ai/claude-code-win32-x64",
       requires: windowsNative.requires || ["node-lief"],
+    };
+  }
+
+  if (linuxNative && linuxNative.unsupported !== true) {
+    // Linux ELF 无已发布验证窗口：不写 ceiling，versions 为空，
+    // 运行时全部走 provisional 本机自验证；纯 JS 实现无需 node-lief。
+    payload.linuxNativeExperimental = {
+      floor: linuxNative.floor,
+      versions: versionsFrom(linuxNative),
+      platforms: linuxNative.platforms || ["linux-x64", "linux-arm64"],
+      packageNames: linuxNative.packageNames || [],
+      requires: linuxNative.requires || [],
     };
   }
 

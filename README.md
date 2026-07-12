@@ -68,7 +68,7 @@ Claude Code 是一个很棒的终端 AI 编程助手，但它没有中文界面�
 | macOS · native binary（arm64） | `2.1.113 - 2.1.205` 内的已验证版本 | 需要 `node-lief`；个别版本未收录，见支持矩阵 |
 | Windows · npm（PowerShell） | `2.1.92 - 2.1.112` | 用 install.ps1，需 PowerShell 5.1+ |
 | Windows · native .exe（x64） | `2.1.113 - 2.1.205` 内的已验证版本 | 需要 `node-lief`；个别版本未收录，见支持矩阵 |
-| Linux · 官方安装器 | 暂无已验证版本 | 仅 Layer 1~3 生效 |
+| Linux · native binary（x64 / arm64） | `2.1.113` 起安装时本机自检 | 纯 JS ELF 补丁，无需 `node-lief`；含官方安装器与 npm ≥2.1.113 |
 
 > - **版本号不是运行门禁**：高于已知 native 下限、且仍能被识别的新版会先在本机临时提取、翻译、重打包并执行启动自检；通过后才替换。已有词条继续中文，新文案原样保留英文。
 > - **失败不伤 CLI**：补丁、重打包或启动自检任一步失败，都会保留或恢复原文件；失败只影响中文覆盖，不影响 Claude Code 使用。

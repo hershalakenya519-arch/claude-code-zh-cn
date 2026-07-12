@@ -235,5 +235,18 @@
     "requires": [
       "node-lief"
     ]
+  },
+  "linuxNativeExperimental": {
+    "floor": "2.1.113",
+    "versions": [],
+    "platforms": [
+      "linux-x64",
+      "linux-arm64"
+    ],
+    "packageNames": [
+      "@anthropic-ai/claude-code-linux-x64",
+      "@anthropic-ai/claude-code-linux-arm64"
+    ],
+    "requires": []
   }
 }

@@ -224,6 +224,12 @@ native_platform() {
         MINGW64_NT-*|MSYS_NT-*|CYGWIN_NT-*)
             printf 'win32-x64'
             ;;
+        Linux-x86_64)
+            printf 'linux-x64'
+            ;;
+        Linux-aarch64|Linux-arm64)
+            printf 'linux-arm64'
+            ;;
         *)
             printf ''
             ;;
@@ -257,10 +263,14 @@ for (const key of [
   "macosNativeOfficialInstallerExperimental",
   "macosNativeExperimental",
   "windowsNativeExperimental",
+  "linuxNativeExperimental",
 ]) {
   const entry = data[key];
   if (!entry) continue;
-  if (platform && entry.platform && entry.platform !== platform) continue;
+  const entryPlatforms = Array.isArray(entry.platforms)
+    ? entry.platforms
+    : entry.platform ? [entry.platform] : [];
+  if (platform && entryPlatforms.length && !entryPlatforms.includes(platform)) continue;
   versions.push(...(entry.versions || []));
 }
 process.exit(versions.includes(version) ? 0 : 1);
@@ -303,9 +313,14 @@ for (const key of [
   "macosNativeOfficialInstallerExperimental",
   "macosNativeExperimental",
   "windowsNativeExperimental",
+  "linuxNativeExperimental",
 ]) {
   const entry = data[key];
-  if (!entry || entry.platform !== platform) continue;
+  if (!entry) continue;
+  const entryPlatforms = Array.isArray(entry.platforms)
+    ? entry.platforms
+    : entry.platform ? [entry.platform] : [];
+  if (!entryPlatforms.includes(platform)) continue;
   const floor = parse(entry.floor);
   if (!floor) continue;
   if (compare(candidate, floor) >= 0) process.exit(0);
@@ -711,7 +726,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                     "${PATCH_REVISION:-unknown}" \
                     "$PATCH_MODE" \
                     "$NATIVE_PLATFORM"; then
-                    if node "$PLUGIN_ROOT/bun-binary-io.js" check-deps 2>/dev/null | grep -q "ok"; then
+                    if node "$PLUGIN_ROOT/bun-binary-io.js" check-deps "$NATIVE_BINARY" 2>/dev/null | grep -q "ok"; then
                 tmp_js="${TMPDIR:-/tmp}/claude-zh-cn-repatch.$$.js"
                 status_file="${TMPDIR:-/tmp}/cczh-native-patch-status.$$.${RANDOM:-0}"
                 backup_path="${NATIVE_BINARY}.zh-cn-backup"

@@ -3,7 +3,8 @@
  * bun-binary-io.js — Bun 原生二进制 I/O 工具
  *
  * 从 tweakcc (Piebald-AI/tweakcc) 的 nativeInstallation.ts 精简移植。
- * 支持 macOS (Mach-O) 与 Windows (PE)，仍按平台版本窗口开放。
+ * 支持 macOS (Mach-O)、Windows (PE) 与 Linux (ELF)，仍按平台版本窗口开放。
+ * Mach-O / PE 依赖 node-lief；ELF 为纯 JS 节手术，不需要 node-lief。
  *
  * CLI 子命令：
  *   detect <claude-cmd>     → 输出 "npm:<path>" 或 "native-bun:<path>" 或 "unknown"
@@ -11,7 +12,7 @@
  *   repack <binary> <js>    → 将修改后的 JS 写回二进制（macOS 含 codesign）
  *   version <binary>        → 输出二进制内嵌的版本号
  *   resolve <path>          → 输出 realpath（跨平台 symlink 解析）
- *   check-deps              → 检查 node-lief 是否可用
+ *   check-deps [binary]     → 检查依赖是否满足（ELF 不需要 node-lief，给定路径按格式判断）
  */
 
 "use strict";
@@ -116,9 +117,9 @@ function detectInstallation(claudeCmd) {
   try { realPath = fs.realpathSync(claudeCmd); } catch { return "unknown"; }
 
   // 2. 先判真实目标本身是不是 Bun 二进制（Codex 二审 #1）
-  //    仅支持 Mach-O（macOS），ELF (Linux) 暂不开放
+  //    Mach-O（macOS）/ PE（Windows）/ ELF（Linux）都按 native-bun 处理
   const format = detectBinaryFormat(realPath);
-  if ((format === "MachO64" || format === "MachO32" || format === "PE") && hasBunTrailer(realPath)) {
+  if ((format === "MachO64" || format === "MachO32" || format === "PE" || format === "ELF") && hasBunTrailer(realPath)) {
     return "native-bun:" + realPath;
   }
 
@@ -562,6 +563,210 @@ function repackPE(LIEF, peBinary, binPath, newBunBuffer, outputPath, sectionHead
 }
 
 // ============================================================================
+// ELF (Linux) 提取/重打包 — 纯 JS 节手术，不依赖 node-lief
+//
+// Bun 在 Linux 上把 standalone 数据放进正规 ELF 节 `.bun`（PT_LOAD 段内），
+// 节内容 = [u32/u64 大小头][Bun data blob]，blob 内偏移全部相对 blob 起点。
+// 重打包 = 替换 `.bun` 节内容，并把节后内容（.symtab / .strtab / 节头表等）
+// 按 65536 对齐的整数倍整体平移，同步修正 ELF 头 / 节头表 / 程序头表偏移。
+// 65536 覆盖 x64 (4K)、arm64 (4K/16K/64K) 的所有页大小，平移不破坏任何对齐。
+// ============================================================================
+
+function parseElfLayout(fd) {
+  const ehdr = Buffer.alloc(64);
+  fs.readSync(fd, ehdr, 0, 64, 0);
+  if (!(ehdr[0] === 0x7f && ehdr[1] === 0x45 && ehdr[2] === 0x4c && ehdr[3] === 0x46)) {
+    throw new Error("Not an ELF binary");
+  }
+  if (ehdr[4] !== 2 || ehdr[5] !== 1) {
+    throw new Error("Only ELF64 little-endian binaries are supported");
+  }
+  const layout = {
+    ehdr,
+    e_phoff: Number(ehdr.readBigUInt64LE(0x20)),
+    e_shoff: Number(ehdr.readBigUInt64LE(0x28)),
+    e_phentsize: ehdr.readUInt16LE(0x36),
+    e_phnum: ehdr.readUInt16LE(0x38),
+    e_shentsize: ehdr.readUInt16LE(0x3a),
+    e_shnum: ehdr.readUInt16LE(0x3c),
+    e_shstrndx: ehdr.readUInt16LE(0x3e),
+  };
+  if (!layout.e_shoff || !layout.e_shnum) {
+    throw new Error("ELF has no section headers");
+  }
+  layout.shdrs = Buffer.alloc(layout.e_shentsize * layout.e_shnum);
+  fs.readSync(fd, layout.shdrs, 0, layout.shdrs.length, layout.e_shoff);
+  layout.phdrs = Buffer.alloc(layout.e_phentsize * layout.e_phnum);
+  fs.readSync(fd, layout.phdrs, 0, layout.phdrs.length, layout.e_phoff);
+
+  const shstr = readElfShdr(layout, layout.e_shstrndx);
+  const shstrtab = Buffer.alloc(shstr.size);
+  fs.readSync(fd, shstrtab, 0, shstr.size, shstr.offset);
+  layout.sectionName = (nameOff) => {
+    const end = shstrtab.indexOf(0, nameOff);
+    return shstrtab.subarray(nameOff, end === -1 ? shstrtab.length : end).toString("utf8");
+  };
+  return layout;
+}
+
+function readElfShdr(layout, index) {
+  const base = index * layout.e_shentsize;
+  const view = layout.shdrs.subarray(base, base + layout.e_shentsize);
+  return {
+    index,
+    nameOff: view.readUInt32LE(0),
+    type: view.readUInt32LE(4),
+    offset: Number(view.readBigUInt64LE(24)),
+    size: Number(view.readBigUInt64LE(32)),
+    addralign: Number(view.readBigUInt64LE(48)),
+  };
+}
+
+const ELF_SHT_PROGBITS = 1;
+
+function extractFromELFFile(binaryPath) {
+  const fd = fs.openSync(binaryPath, "r");
+  try {
+    const layout = parseElfLayout(fd);
+
+    // 优先按节名 `.bun`；名字变了再退化为逐节尝试解析（与 PE 扫描策略一致）
+    let section = null;
+    for (let i = 0; i < layout.e_shnum; i++) {
+      const candidate = readElfShdr(layout, i);
+      if (candidate.type === ELF_SHT_PROGBITS && layout.sectionName(candidate.nameOff) === ".bun") {
+        section = candidate;
+        break;
+      }
+    }
+
+    let parsed = null;
+    if (section) {
+      const content = Buffer.alloc(section.size);
+      fs.readSync(fd, content, 0, section.size, section.offset);
+      parsed = extractBunDataFromSection(content);
+    } else {
+      for (let i = 0; i < layout.e_shnum; i++) {
+        const candidate = readElfShdr(layout, i);
+        if (candidate.type !== ELF_SHT_PROGBITS || candidate.size < SIZEOF_OFFSETS + BUN_TRAILER.length) continue;
+        try {
+          const content = Buffer.alloc(candidate.size);
+          fs.readSync(fd, content, 0, candidate.size, candidate.offset);
+          parsed = extractBunDataFromSection(content);
+          section = candidate;
+          break;
+        } catch {}
+      }
+    }
+
+    if (!section || !parsed) {
+      throw new Error("Bun section not found in ELF binary");
+    }
+    return { ...parsed, format: "ELF", section, layout };
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+function copyFileRange(srcFd, dstFd, srcStart, srcEnd, dstStart) {
+  const chunk = Buffer.alloc(8 * 1024 * 1024);
+  let src = srcStart;
+  let dst = dstStart;
+  while (src < srcEnd) {
+    const want = Math.min(chunk.length, srcEnd - src);
+    const got = fs.readSync(srcFd, chunk, 0, want, src);
+    if (got <= 0) throw new Error("ELF repack: unexpected EOF while copying");
+    fs.writeSync(dstFd, chunk, 0, got, dst);
+    src += got;
+    dst += got;
+  }
+}
+
+function repackELFFile(binaryPath, newBunBuffer, sectionHeaderSize, section, layout) {
+  const newSectionData = buildSectionData(newBunBuffer, sectionHeaderSize);
+  const secOff = section.offset;
+  const oldSize = section.size;
+  // 平移量取 65536 的整数倍：节后所有内容的对齐（含未来页大小变化）都不被破坏
+  const padAlign = Math.max(65536, section.addralign || 1);
+  const pad = (((oldSize - newSectionData.length) % padAlign) + padAlign) % padAlign;
+  const delta = newSectionData.length + pad - oldSize;
+
+  const stat = fs.statSync(binaryPath);
+  const tmpPath = binaryPath + ".tmp";
+  const srcFd = fs.openSync(binaryPath, "r");
+  let dstFd = -1;
+  try {
+    dstFd = fs.openSync(tmpPath, "w", stat.mode);
+
+    // 1) 节前内容原样复制；2) 写入新节内容 + 对齐填充；3) 节后内容整体平移复制
+    copyFileRange(srcFd, dstFd, 0, secOff, 0);
+    fs.writeSync(dstFd, newSectionData, 0, newSectionData.length, secOff);
+    if (pad > 0) {
+      fs.writeSync(dstFd, Buffer.alloc(pad), 0, pad, secOff + newSectionData.length);
+    }
+    copyFileRange(srcFd, dstFd, secOff + oldSize, stat.size, secOff + newSectionData.length + pad);
+
+    // 4) 修正 ELF 头（e_phoff / e_shoff）
+    const newPhoff = layout.e_phoff > secOff ? layout.e_phoff + delta : layout.e_phoff;
+    const newShoff = layout.e_shoff > secOff ? layout.e_shoff + delta : layout.e_shoff;
+    const ehdr = Buffer.from(layout.ehdr);
+    ehdr.writeBigUInt64LE(BigInt(newPhoff), 0x20);
+    ehdr.writeBigUInt64LE(BigInt(newShoff), 0x28);
+    fs.writeSync(dstFd, ehdr, 0, ehdr.length, 0);
+
+    // 5) 修正节头表：`.bun` 更新 sh_size；节后的节整体平移 sh_offset
+    const shdrs = Buffer.from(layout.shdrs);
+    for (let i = 0; i < layout.e_shnum; i++) {
+      const base = i * layout.e_shentsize;
+      const shOffset = Number(shdrs.readBigUInt64LE(base + 24));
+      if (i === section.index) {
+        shdrs.writeBigUInt64LE(BigInt(newSectionData.length), base + 32);
+      } else if (shOffset > secOff) {
+        shdrs.writeBigUInt64LE(BigInt(shOffset + delta), base + 24);
+      }
+    }
+    fs.writeSync(dstFd, shdrs, 0, shdrs.length, newShoff);
+
+    // 6) 修正程序头表：覆盖 `.bun` 的段扩缩 filesz/memsz；节后的段平移 p_offset
+    const phdrs = Buffer.from(layout.phdrs);
+    for (let i = 0; i < layout.e_phnum; i++) {
+      const base = i * layout.e_phentsize;
+      const pOffset = Number(phdrs.readBigUInt64LE(base + 8));
+      const pFilesz = Number(phdrs.readBigUInt64LE(base + 32));
+      const pMemsz = Number(phdrs.readBigUInt64LE(base + 40));
+      if (pOffset > secOff) {
+        phdrs.writeBigUInt64LE(BigInt(pOffset + delta), base + 8);
+      } else if (pOffset + pFilesz >= secOff + oldSize) {
+        phdrs.writeBigUInt64LE(BigInt(pFilesz + delta), base + 32);
+        phdrs.writeBigUInt64LE(BigInt(pMemsz + delta), base + 40);
+      }
+    }
+    fs.writeSync(dstFd, phdrs, 0, phdrs.length, newPhoff);
+  } finally {
+    fs.closeSync(srcFd);
+    if (dstFd !== -1) fs.closeSync(dstFd);
+  }
+
+  try {
+    fs.chmodSync(tmpPath, stat.mode);
+  } catch {}
+  try {
+    fs.renameSync(tmpPath, binaryPath);
+  } catch (error) {
+    try { if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath); } catch {}
+    if (error && (error.code === "ETXTBSY" || error.code === "EBUSY" || error.code === "EPERM")) {
+      throw new Error("Cannot update the Claude executable while it is running. Please close all Claude instances and try again.");
+    }
+    throw error;
+  }
+
+  // 7) 往返校验：重新提取，blob 必须与写入内容完全一致
+  const check = extractFromELFFile(binaryPath);
+  if (!check.bunData.equals(newBunBuffer)) {
+    throw new Error("ELF repack verification failed: embedded Bun data did not round-trip");
+  }
+}
+
+// ============================================================================
 // CLI 子命令实现
 // ============================================================================
 
@@ -580,13 +785,20 @@ function cmdExtract() {
     process.exit(1);
   }
 
-  const LIEF = loadNodeLief();
-  if (!LIEF) {
-    process.stderr.write("Error: node-lief not found. Install with: npm install -g node-lief\n");
-    process.exit(1);
+  let extracted;
+  if (detectBinaryFormat(binaryPath) === "ELF") {
+    // Linux ELF：纯 JS 提取，不需要 node-lief
+    extracted = extractFromELFFile(binaryPath);
+  } else {
+    const LIEF = loadNodeLief();
+    if (!LIEF) {
+      process.stderr.write("Error: node-lief not found. Install with: npm install -g node-lief\n");
+      process.exit(1);
+    }
+    extracted = extractNativeBun(LIEF, binaryPath);
   }
 
-  const { bunData, bunOffsets, moduleStructSize } = extractNativeBun(LIEF, binaryPath);
+  const { bunData, bunOffsets, moduleStructSize } = extracted;
   const found = findClaudeModule(bunData, bunOffsets, moduleStructSize);
   if (!found || found.contents.length === 0) {
     process.stderr.write("Error: claude module not found in binary\n");
@@ -605,6 +817,17 @@ function cmdRepack() {
     process.exit(1);
   }
 
+  const modifiedJs = fs.readFileSync(jsPath);
+
+  if (detectBinaryFormat(binaryPath) === "ELF") {
+    // Linux ELF：纯 JS 节手术，不需要 node-lief
+    const { bunData, bunOffsets, sectionHeaderSize, moduleStructSize, section, layout } = extractFromELFFile(binaryPath);
+    const newBuffer = rebuildBunData(bunData, bunOffsets, modifiedJs, moduleStructSize);
+    repackELFFile(binaryPath, newBuffer, sectionHeaderSize, section, layout);
+    process.stdout.write("ok");
+    return;
+  }
+
   const LIEF = loadNodeLief();
   if (!LIEF) {
     process.stderr.write("Error: node-lief not found. Install with: npm install -g node-lief\n");
@@ -612,7 +835,6 @@ function cmdRepack() {
   }
 
   LIEF.logging.disable();
-  const modifiedJs = fs.readFileSync(jsPath);
   const { format, binary, section, segment, bunOffsets, bunData, sectionHeaderSize, moduleStructSize } = extractNativeBun(LIEF, binaryPath);
   const newBuffer = rebuildBunData(bunData, bunOffsets, modifiedJs, moduleStructSize);
 
@@ -633,7 +855,11 @@ function cmdRepack() {
 function isClaudePackageName(name) {
   return name === "@anthropic-ai/claude-code" ||
     name === "@anthropic-ai/claude-code-darwin-arm64" ||
-    name === "@anthropic-ai/claude-code-win32-x64";
+    name === "@anthropic-ai/claude-code-win32-x64" ||
+    name === "@anthropic-ai/claude-code-linux-x64" ||
+    name === "@anthropic-ai/claude-code-linux-arm64" ||
+    name === "@anthropic-ai/claude-code-linux-x64-musl" ||
+    name === "@anthropic-ai/claude-code-linux-arm64-musl";
 }
 
 function normalizeSemver(value) {
@@ -699,15 +925,22 @@ function cmdVersion() {
     process.exit(1);
   }
 
-  const LIEF = loadNodeLief();
-
   try {
-    if (LIEF) {
-      const { bunData, bunOffsets, moduleStructSize } = extractNativeBun(LIEF, binaryPath);
-      const found = findClaudeModule(bunData, bunOffsets, moduleStructSize);
+    let extracted = null;
+    if (detectBinaryFormat(binaryPath) === "ELF") {
+      extracted = extractFromELFFile(binaryPath);
+    } else {
+      const LIEF = loadNodeLief();
+      if (LIEF) {
+        extracted = extractNativeBun(LIEF, binaryPath);
+      }
+    }
+    if (extracted) {
+      const found = findClaudeModule(extracted.bunData, extracted.bunOffsets, extracted.moduleStructSize);
       if (found && found.contents.length > 0) {
-        // 从 JS 内容头部提取版本号（匹配 "// Version: X.Y.Z" 格式）
-        const header = found.contents.subarray(0, 200).toString("utf-8");
+        // 从 JS 内容头部提取版本号（匹配 "// Version: X.Y.Z" 格式）。
+        // 2.1.207 起头部先有 @bun pragma 和条款注释，版本行更靠后，窗口取 4096。
+        const header = found.contents.subarray(0, 4096).toString("utf-8");
         const match = header.match(/\/\/ Version: (\S+)/);
         if (match) {
           process.stdout.write(match[1]);
@@ -736,6 +969,12 @@ function cmdResolve() {
 }
 
 function cmdCheckDeps() {
+  // 可选参数：目标二进制路径。ELF 走纯 JS 通路，不需要 node-lief。
+  const binaryPath = process.argv[3];
+  if (binaryPath && detectBinaryFormat(binaryPath) === "ELF") {
+    process.stdout.write("ok");
+    return;
+  }
   const LIEF = loadNodeLief();
   process.stdout.write(LIEF ? "ok" : "missing");
 }

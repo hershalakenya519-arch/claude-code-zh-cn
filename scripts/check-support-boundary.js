@@ -87,7 +87,7 @@ function isNegatedBoundaryLine(line) {
 // 统一「已验证版本」口径后，native 行只要明确限定在已验证窗口内（已验证 / experimental 措辞），
 // 且不宣称 latest / stable 全量支持，就是合法表述。
 function isAllowedNativeExperimentalLine(line) {
-  const mentionsPlatform = /macOS|darwin|Windows|win32/i.test(line);
+  const mentionsPlatform = /macOS|darwin|Windows|win32|Linux|ELF/i.test(line);
   const mentionsNative = /native|原生|二进制|binary/i.test(line);
   const verifiedScope = /experimental|实验|已验证/i.test(line);
   const stableClaim = /\bstable\b|稳定支持|stable CLI Patch/i.test(line);

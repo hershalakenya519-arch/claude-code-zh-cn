@@ -1140,6 +1140,8 @@ printf '1'
       CLAUDE_PLUGIN_ROOT: pluginRoot,
       PATH: `${fakeBin}:${process.env.PATH}`,
       ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
+      // 2.1.112 属于 macOS 已发布窗口；钉住平台避免宿主机（如 Linux）改变判定路径
+      ZH_CN_NATIVE_PLATFORM: "darwin-arm64",
       GIT_TERMINAL_PROMPT: "0",
     },
     input: "\n",
@@ -1194,6 +1196,8 @@ printf '1'
       CLAUDE_PLUGIN_ROOT: pluginRoot,
       PATH: `${fakeBin}:${process.env.PATH}`,
       ZH_CN_UPDATE_CHECK_INTERVAL_SECONDS: "0",
+      // 本用例验证的是 macOS 已验证窗口路径；钉住平台保证任意宿主机上语义一致
+      ZH_CN_NATIVE_PLATFORM: "darwin-arm64",
       GIT_TERMINAL_PROMPT: "0",
     },
     input: "\n",

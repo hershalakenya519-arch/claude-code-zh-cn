@@ -88,12 +88,15 @@ function nativeSupportLists(support) {
     "macosNativeOfficialInstallerExperimental",
     "macosNativeExperimental",
     "windowsNativeExperimental",
+    "linuxNativeExperimental",
   ]) {
     const entry = support?.[key];
     if (!entry) continue;
     lists.push({
       key,
-      platform: entry.platform || "",
+      platforms: Array.isArray(entry.platforms)
+        ? entry.platforms
+        : entry.platform ? [entry.platform] : [],
       versions: Array.isArray(entry.versions) ? entry.versions : [],
       floor: entry.floor,
       ceiling: entry.ceiling,
@@ -110,6 +113,9 @@ function nativePlatformForTarget(target) {
   if (process.platform === "darwin") {
     return "darwin-arm64";
   }
+  if (process.platform === "linux") {
+    return process.arch === "arm64" ? "linux-arm64" : "linux-x64";
+  }
   return process.platform || "";
 }
 
@@ -117,7 +123,7 @@ function isSupportedNativeVersion(version, support, platform = "") {
   if (!version) return false;
   const versions = [];
   for (const entry of nativeSupportLists(support)) {
-    if (platform && entry.platform && entry.platform !== platform) continue;
+    if (platform && entry.platforms.length && !entry.platforms.includes(platform)) continue;
     versions.push(...entry.versions);
   }
   return versions.includes(version);
