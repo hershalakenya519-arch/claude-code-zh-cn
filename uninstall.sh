@@ -370,9 +370,9 @@ claude_bin="$(which claude 2>/dev/null || true)"
 if [ -n "$claude_bin" ]; then
     real_bin="$(resolve_real_path "$claude_bin")"
 
-    # 优先检测原生二进制备份
+    # 优先检测原生二进制备份（先写临时文件再 rename：原子替换，避免并发启动的 claude 读到半成品）
     if [ -n "$real_bin" ] && [ -f "${real_bin}.zh-cn-backup" ]; then
-        cp "${real_bin}.zh-cn-backup" "$real_bin"
+        cp "${real_bin}.zh-cn-backup" "${real_bin}.zh-cn-swap.$$" && mv -f "${real_bin}.zh-cn-swap.$$" "$real_bin"
         rm "${real_bin}.zh-cn-backup"
         echo -e "${GREEN}已还原原生二进制${NC}"
         RESTORED=true

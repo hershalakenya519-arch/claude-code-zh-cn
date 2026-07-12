@@ -155,6 +155,98 @@ function createFakeElfBinary(filePath) {
   fs.chmodSync(filePath, 0o755);
 }
 
+// 结构完整的 ELF64 假二进制：.bun 节 + 尾部 .comment 节 + shstrtab + 节头表，
+// 用于走通纯 JS 的 ELF extract/repack 节手术路径（不需要 node-lief）。
+const FAKE_ELF_COMMENT = "fake-elf-tail-section";
+
+function createFakeElfBunBinary(filePath, source) {
+  const sectionData = createBunSectionData(source);
+  const bunOffset = 4096;
+  const commentData = Buffer.from(FAKE_ELF_COMMENT);
+  const commentOffset = bunOffset + sectionData.length;
+  const shstrtab = Buffer.from("\0.bun\0.comment\0.shstrtab\0", "latin1");
+  const shstrtabOffset = commentOffset + commentData.length;
+  const shoff = shstrtabOffset + shstrtab.length;
+
+  const ehdr = Buffer.alloc(64);
+  Buffer.from([0x7f, 0x45, 0x4c, 0x46, 0x02, 0x01, 0x01, 0x00]).copy(ehdr, 0);
+  ehdr.writeUInt16LE(2, 0x10); // e_type = ET_EXEC
+  ehdr.writeUInt16LE(62, 0x12); // e_machine = x86-64
+  ehdr.writeUInt32LE(1, 0x14); // e_version
+  ehdr.writeBigUInt64LE(0x400000n, 0x18); // e_entry
+  ehdr.writeBigUInt64LE(64n, 0x20); // e_phoff
+  ehdr.writeBigUInt64LE(BigInt(shoff), 0x28); // e_shoff
+  ehdr.writeUInt16LE(64, 0x34); // e_ehsize
+  ehdr.writeUInt16LE(56, 0x36); // e_phentsize
+  ehdr.writeUInt16LE(1, 0x38); // e_phnum
+  ehdr.writeUInt16LE(64, 0x3a); // e_shentsize
+  ehdr.writeUInt16LE(4, 0x3c); // e_shnum
+  ehdr.writeUInt16LE(3, 0x3e); // e_shstrndx
+
+  const phdr = Buffer.alloc(56);
+  phdr.writeUInt32LE(1, 0x00); // PT_LOAD
+  phdr.writeUInt32LE(5, 0x04); // R+X
+  phdr.writeBigUInt64LE(0n, 0x08); // p_offset
+  phdr.writeBigUInt64LE(0x400000n, 0x10); // p_vaddr
+  phdr.writeBigUInt64LE(0x400000n, 0x18); // p_paddr
+  phdr.writeBigUInt64LE(BigInt(bunOffset + sectionData.length), 0x20); // p_filesz 覆盖 .bun
+  phdr.writeBigUInt64LE(BigInt(bunOffset + sectionData.length), 0x28); // p_memsz
+  phdr.writeBigUInt64LE(4096n, 0x30); // p_align
+
+  function shdr({ nameOff, type, offset, size, addralign }) {
+    const entry = Buffer.alloc(64);
+    entry.writeUInt32LE(nameOff, 0);
+    entry.writeUInt32LE(type, 4);
+    entry.writeBigUInt64LE(BigInt(offset), 24);
+    entry.writeBigUInt64LE(BigInt(size), 32);
+    entry.writeBigUInt64LE(BigInt(addralign), 48);
+    return entry;
+  }
+
+  const shdrs = Buffer.concat([
+    shdr({ nameOff: 0, type: 0, offset: 0, size: 0, addralign: 0 }),
+    shdr({ nameOff: 1, type: 1, offset: bunOffset, size: sectionData.length, addralign: 16 }),
+    shdr({ nameOff: 6, type: 1, offset: commentOffset, size: commentData.length, addralign: 1 }),
+    shdr({ nameOff: 15, type: 3, offset: shstrtabOffset, size: shstrtab.length, addralign: 1 }),
+  ]);
+
+  const file = Buffer.concat([
+    ehdr,
+    phdr,
+    Buffer.alloc(bunOffset - 64 - 56),
+    sectionData,
+    commentData,
+    shstrtab,
+    shdrs,
+  ]);
+  fs.writeFileSync(filePath, file);
+  fs.chmodSync(filePath, 0o755);
+}
+
+function readFakeElfSection(filePath, wantName) {
+  const file = fs.readFileSync(filePath);
+  const shoff = Number(file.readBigUInt64LE(0x28));
+  const shentsize = file.readUInt16LE(0x3a);
+  const shnum = file.readUInt16LE(0x3c);
+  const shstrndx = file.readUInt16LE(0x3e);
+  const strBase = shoff + shstrndx * shentsize;
+  const strOffset = Number(file.readBigUInt64LE(strBase + 24));
+  const strSize = Number(file.readBigUInt64LE(strBase + 32));
+  const strtab = file.subarray(strOffset, strOffset + strSize);
+  for (let i = 0; i < shnum; i++) {
+    const base = shoff + i * shentsize;
+    const nameOff = file.readUInt32LE(base);
+    const end = strtab.indexOf(0, nameOff);
+    const name = strtab.subarray(nameOff, end === -1 ? strtab.length : end).toString();
+    if (name === wantName) {
+      const offset = Number(file.readBigUInt64LE(base + 24));
+      const size = Number(file.readBigUInt64LE(base + 32));
+      return file.subarray(offset, offset + size);
+    }
+  }
+  return null;
+}
+
 function runHelper(args, extraEnv = {}) {
   return execFileSync("node", [helperPath, ...args], {
     cwd: repoRoot,
@@ -266,7 +358,7 @@ test("detect returns unknown for plain files that are neither Bun binaries nor n
   assert.equal(output, "unknown");
 });
 
-test("detect keeps ELF binaries out of native-bun path", () => {
+test("detect treats ELF binaries with Bun trailer as native-bun", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "cczh-bun-detect-elf-"));
   const elfPath = path.join(tmp, "claude-elf");
   createFakeElfBinary(elfPath);
@@ -276,7 +368,64 @@ test("detect keeps ELF binaries out of native-bun path", () => {
     npm_config_prefix: path.join(tmp, "npm-prefix"),
   });
 
-  assert.equal(output, "unknown");
+  assert.equal(output, `native-bun:${fs.realpathSync(elfPath)}`);
+});
+
+test("check-deps reports ok for ELF binaries without node-lief", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "cczh-bun-elf-deps-"));
+  const elfPath = path.join(tmp, "claude-elf");
+  createFakeElfBunBinary(elfPath, "// Version: 2.1.207\nconst label = \"Bash command\";\n");
+
+  const output = runHelper(["check-deps", elfPath], {
+    HOME: path.join(tmp, "home"),
+    npm_config_prefix: path.join(tmp, "npm-prefix"),
+  });
+
+  assert.equal(output, "ok");
+});
+
+test("extract, version, and repack work on ELF binaries without node-lief", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "cczh-bun-elf-repack-"));
+  const binaryPath = path.join(tmp, "claude");
+  const extractedPath = path.join(tmp, "extracted.js");
+  const replacementPath = path.join(tmp, "replacement.js");
+  const initialSource = "// Version: 2.1.207\nconst label = \"Bash command\";\n";
+  // 变长替换：翻译后的中文比原文长，走「节后内容整体平移」的手术路径
+  const replacementSource =
+    "// Version: 2.1.207\nconst label = \"Bash 命令（未沙盒隔离，含更长的翻译文本用于扩节路径）\";\n";
+
+  createFakeElfBunBinary(binaryPath, initialSource);
+  fs.writeFileSync(replacementPath, replacementSource);
+
+  const env = {
+    HOME: path.join(tmp, "home"),
+    npm_config_prefix: path.join(tmp, "npm-prefix"),
+  };
+
+  assert.equal(runHelper(["detect", binaryPath], env), `native-bun:${fs.realpathSync(binaryPath)}`);
+  assert.equal(runHelper(["version", binaryPath], env), "2.1.207");
+  assert.equal(runHelper(["extract", binaryPath, extractedPath], env), "ok");
+  assert.equal(fs.readFileSync(extractedPath, "utf8"), initialSource);
+
+  const repack = runHelperWithStatus(["repack", binaryPath, replacementPath], env);
+  assert.equal(repack.status, 0, repack.stderr);
+  assert.equal(repack.stdout.trim(), "ok");
+
+  assert.equal(runHelper(["extract", binaryPath, extractedPath], env), "ok");
+  assert.equal(fs.readFileSync(extractedPath, "utf8"), replacementSource);
+
+  // 节后内容（.comment / shstrtab / 节头表）平移后必须完好
+  assert.equal(String(readFakeElfSection(binaryPath, ".comment")), FAKE_ELF_COMMENT);
+
+  // 变短替换：走「节缩小」路径，同样必须往返一致
+  const shorterPath = path.join(tmp, "shorter.js");
+  const shorterSource = "// Version: 2.1.207\nconst label = \"短\";\n";
+  fs.writeFileSync(shorterPath, shorterSource);
+  const shrink = runHelperWithStatus(["repack", binaryPath, shorterPath], env);
+  assert.equal(shrink.status, 0, shrink.stderr);
+  assert.equal(runHelper(["extract", binaryPath, extractedPath], env), "ok");
+  assert.equal(fs.readFileSync(extractedPath, "utf8"), shorterSource);
+  assert.equal(String(readFakeElfSection(binaryPath, ".comment")), FAKE_ELF_COMMENT);
 });
 
 test("resolve returns the real path for symlinks", () => {

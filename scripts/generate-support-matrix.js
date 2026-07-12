@@ -111,7 +111,14 @@ function buildMarkdown(config, compat) {
     ? "-"
     : macosExperimental.verification ||
       renderRepresentativeStatus(macosExperimental.representatives, resultMap);
-  const linuxUnsupported = config.support?.linuxOfficialInstaller || {};
+  const linuxInstaller = config.support?.linuxOfficialInstaller || {};
+  const linuxNativeExperimental = config.support?.linuxNativeExperimental || null;
+  const linuxTier = linuxInstaller.unsupported ? "unsupported" : "experimental";
+  const linuxVerification =
+    linuxTier === "experimental" && linuxNativeExperimental
+      ? linuxNativeExperimental.verification ||
+        renderRepresentativeStatus(linuxNativeExperimental.representatives, resultMap)
+      : "-";
   const windowsNpm = config.support?.windowsNpmPowerShell || {};
   const windowsNpmStable = windowsNpm.stable || {};
   const windowsNpmTier = windowsNpm.unsupported ? "unsupported" : "stable";
@@ -144,9 +151,12 @@ function buildMarkdown(config, compat) {
           )} | ${renderAction("experimental", macosNativeExperimental.notes)} |`,
         ]
       : []),
-    `| Linux official installer | ${renderRange(linuxUnsupported)} | unsupported | ${renderCoverageForChannel(
-      "unsupported"
-    )} | ${renderAction("unsupported", linuxUnsupported.notes)} |`,
+    `| Linux native binary (official installer / npm ≥2.1.113) | ${renderRange(
+      linuxInstaller
+    )} | ${linuxTier} | ${renderCoverageForChannel(linuxTier, linuxVerification)} | ${renderAction(
+      linuxTier,
+      linuxInstaller.notes
+    )} |`,
     `| Windows / npm global install (PowerShell) | ${renderRange(
       windowsNpmWindow
     )} | ${windowsNpmTier} | ${renderCoverageForChannel(windowsNpmTier)} | ${renderAction(
@@ -199,7 +209,9 @@ function buildMarkdown(config, compat) {
           )} | ${macosNativeExperimental.notes || "-"} |`,
         ]
       : []),
-    `| Linux official installer | unsupported | ${renderRange(linuxUnsupported)} | - | ${linuxUnsupported.notes || "-"} |`,
+    `| Linux native binary (official installer / npm ≥2.1.113) | ${linuxTier} | ${renderRange(
+      linuxInstaller
+    )} | ${linuxVerification} | ${(linuxNativeExperimental && linuxNativeExperimental.notes) || linuxInstaller.notes || "-"} |`,
     `| Windows / npm global install (PowerShell) | ${windowsNpmTier} | ${renderRange(
       windowsNpmWindow
     )} | - | ${windowsNpmWindow.notes || "-"} |`,

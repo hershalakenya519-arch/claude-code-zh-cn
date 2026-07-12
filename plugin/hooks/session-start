@@ -224,6 +224,12 @@ native_platform() {
         MINGW64_NT-*|MSYS_NT-*|CYGWIN_NT-*)
             printf 'win32-x64'
             ;;
+        Linux-x86_64)
+            printf 'linux-x64'
+            ;;
+        Linux-aarch64|Linux-arm64)
+            printf 'linux-arm64'
+            ;;
         *)
             printf ''
             ;;
@@ -257,10 +263,14 @@ for (const key of [
   "macosNativeOfficialInstallerExperimental",
   "macosNativeExperimental",
   "windowsNativeExperimental",
+  "linuxNativeExperimental",
 ]) {
   const entry = data[key];
   if (!entry) continue;
-  if (platform && entry.platform && entry.platform !== platform) continue;
+  const entryPlatforms = Array.isArray(entry.platforms)
+    ? entry.platforms
+    : entry.platform ? [entry.platform] : [];
+  if (platform && entryPlatforms.length && !entryPlatforms.includes(platform)) continue;
   versions.push(...(entry.versions || []));
 }
 process.exit(versions.includes(version) ? 0 : 1);
@@ -303,9 +313,14 @@ for (const key of [
   "macosNativeOfficialInstallerExperimental",
   "macosNativeExperimental",
   "windowsNativeExperimental",
+  "linuxNativeExperimental",
 ]) {
   const entry = data[key];
-  if (!entry || entry.platform !== platform) continue;
+  if (!entry) continue;
+  const entryPlatforms = Array.isArray(entry.platforms)
+    ? entry.platforms
+    : entry.platform ? [entry.platform] : [];
+  if (!entryPlatforms.includes(platform)) continue;
   const floor = parse(entry.floor);
   if (!floor) continue;
   if (compare(candidate, floor) >= 0) process.exit(0);
@@ -336,6 +351,18 @@ native_marker_is_current() {
 native_binary_hash() {
     local binary_path="$1"
     node "$PLUGIN_ROOT/bun-binary-io.js" hash "$binary_path" 2>/dev/null || printf "unknown"
+}
+
+# 原子替换二进制：先写临时文件再 rename，避免并发启动的 claude 映射到写了一半的文件（Bus error）
+atomic_replace_binary() {
+    local src="$1"
+    local dst="$2"
+    local tmp="${dst}.zh-cn-swap.$$"
+    if cp "$src" "$tmp" 2>/dev/null && mv -f "$tmp" "$dst" 2>/dev/null; then
+        return 0
+    fi
+    rm -f "$tmp" 2>/dev/null || true
+    return 1
 }
 
 read_source_repo() {
@@ -711,7 +738,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                     "${PATCH_REVISION:-unknown}" \
                     "$PATCH_MODE" \
                     "$NATIVE_PLATFORM"; then
-                    if node "$PLUGIN_ROOT/bun-binary-io.js" check-deps 2>/dev/null | grep -q "ok"; then
+                    if node "$PLUGIN_ROOT/bun-binary-io.js" check-deps "$NATIVE_BINARY" 2>/dev/null | grep -q "ok"; then
                 tmp_js="${TMPDIR:-/tmp}/claude-zh-cn-repatch.$$.js"
                 status_file="${TMPDIR:-/tmp}/cczh-native-patch-status.$$.${RANDOM:-0}"
                 backup_path="${NATIVE_BINARY}.zh-cn-backup"
@@ -723,7 +750,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                 # 同版本时恢复 backup 保证干净基底；版本变化时刷新 backup 为当前版本
                 BACKUP_READY=false
                 if [ -f "$backup_path" ] && [ -n "${CURRENT_VERSION:-}" ] && [ "${CURRENT_VERSION:-}" = "${backup_version:-}" ]; then
-                    if cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null; then
+                    if atomic_replace_binary "$backup_path" "$NATIVE_BINARY"; then
                         BACKUP_READY=true
                     fi
                 else
@@ -778,7 +805,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                                         AUTO_PATCH_MSG="（已自动 patch ${PATCH_COUNT} 处硬编码文字，启动自检通过）"
                                     fi
                                 else
-                                    cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null || true
+                                    atomic_replace_binary "$backup_path" "$NATIVE_BINARY" || true
                                 fi
                                 ;;
                             *)
@@ -788,7 +815,7 @@ if [ -n "$NATIVE_BINARY" ]; then
                     else
                         # 提取失败不触碰二进制；保留当前英文版本。
                         if [ -f "$backup_path" ]; then
-                            cp "$backup_path" "$NATIVE_BINARY" 2>/dev/null || true
+                            atomic_replace_binary "$backup_path" "$NATIVE_BINARY" || true
                         fi
                     fi
                 fi

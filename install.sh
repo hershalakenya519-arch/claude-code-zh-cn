@@ -194,7 +194,7 @@ check_dependencies() {
         local native_path native_version dep_status
         native_path="${install_info#*:}"
         native_version="$(native_binary_version "$native_path")"
-        dep_status="$(node "$PLUGIN_SRC/bun-binary-io.js" check-deps 2>/dev/null || echo "missing")"
+        dep_status="$(node "$PLUGIN_SRC/bun-binary-io.js" check-deps "$native_path" 2>/dev/null || echo "missing")"
 
         if is_supported_native_version "$native_version"; then
             if [ "$dep_status" != "ok" ]; then
@@ -212,7 +212,7 @@ check_dependencies() {
             fi
         else
             echo -e "${YELLOW}检测到原生二进制安装方式；当前版本 ${native_version:-unknown} 暂不支持 CLI Patch，已跳过 CLI Patch（安全退出）${NC}"
-            echo -e "  macOS native 已验证窗口：$(native_support_summary)"
+            echo -e "  已发布 native 验证窗口：$(native_support_summary)"
             echo -e "  如需稳定 CLI 中文化，请使用 npm 安装 Claude Code 2.1.112"
         fi
     fi
@@ -264,6 +264,12 @@ native_platform() {
         Darwin-arm64|Darwin-aarch64)
             printf 'darwin-arm64'
             ;;
+        Linux-x86_64)
+            printf 'linux-x64'
+            ;;
+        Linux-aarch64|Linux-arm64)
+            printf 'linux-arm64'
+            ;;
         *)
             printf ''
             ;;
@@ -293,10 +299,18 @@ const version = process.argv[3];
 const platform = process.argv[4] || "";
 const data = JSON.parse(fs.readFileSync(file, "utf8"));
 const versions = [];
-for (const key of ["macosNativeOfficialInstallerExperimental", "macosNativeExperimental"]) {
+for (const key of [
+  "macosNativeOfficialInstallerExperimental",
+  "macosNativeExperimental",
+  "windowsNativeExperimental",
+  "linuxNativeExperimental",
+]) {
   const entry = data[key];
   if (!entry) continue;
-  if (platform && entry.platform && entry.platform !== platform) continue;
+  const entryPlatforms = Array.isArray(entry.platforms)
+    ? entry.platforms
+    : entry.platform ? [entry.platform] : [];
+  if (platform && entryPlatforms.length && !entryPlatforms.includes(platform)) continue;
   versions.push(...(entry.versions || []));
 }
 process.exit(versions.includes(version) ? 0 : 1);
@@ -339,10 +353,18 @@ function compare(a, b) {
   return 0;
 }
 
-const keys = ["macosNativeExperimental"];
+const keys = [
+  "macosNativeExperimental",
+  "windowsNativeExperimental",
+  "linuxNativeExperimental",
+];
 for (const key of keys) {
   const entry = data[key];
-  if (!entry || entry.platform !== platform || !entry.floor) continue;
+  if (!entry || !entry.floor) continue;
+  const entryPlatforms = Array.isArray(entry.platforms)
+    ? entry.platforms
+    : entry.platform ? [entry.platform] : [];
+  if (!entryPlatforms.includes(platform)) continue;
   if (compare(version, entry.floor) >= 0) {
     process.exit(0);
   }
@@ -1583,6 +1605,20 @@ patch_npm_cli() {
     fi
 }
 
+# 原子替换二进制：先写临时文件再 rename。
+# 慢设备上 255MB 的 cp 要数十秒，期间若启动 claude 会映射到写了一半的文件（Bus error）；
+# rename 是原子操作，任何时刻启动拿到的都是完整文件。
+atomic_replace_binary() {
+    local src="$1"
+    local dst="$2"
+    local tmp="${dst}.zh-cn-swap.$$"
+    if cp "$src" "$tmp" 2>/dev/null && mv -f "$tmp" "$dst" 2>/dev/null; then
+        return 0
+    fi
+    rm -f "$tmp" 2>/dev/null || true
+    return 1
+}
+
 patch_native_binary() {
     local binary_path="$1"
     local tmp_js="${TMPDIR:-/tmp}/claude-zh-cn-extract.$$.js"
@@ -1602,7 +1638,7 @@ patch_native_binary() {
         patch_mode="provisional"
     else
         echo -e "${YELLOW}当前原生二进制版本 ${current_version:-unknown} 暂不支持 CLI Patch，已跳过 CLI Patch（安全退出）${NC}"
-        echo -e "  macOS native 已验证窗口：$(native_support_summary)"
+        echo -e "  已发布 native 验证窗口：$(native_support_summary)"
         echo -e "  如需稳定 CLI 中文化，请使用 npm 安装 Claude Code 2.1.112"
         print_updater_boundary_note
         echo -e "${YELLOW}  下一步：如果是 Claude Code 自动升到未发布窗口，请等插件发布支持，或临时安装支持窗口内版本。${NC}"
@@ -1618,7 +1654,7 @@ patch_native_binary() {
     fi
 
     local dep_status
-    dep_status="$(node "$PLUGIN_SRC/bun-binary-io.js" check-deps 2>/dev/null || echo "missing")"
+    dep_status="$(node "$PLUGIN_SRC/bun-binary-io.js" check-deps "$binary_path" 2>/dev/null || echo "missing")"
     if [ "$dep_status" != "ok" ]; then
         echo -e "${YELLOW}需要安装 node-lief 来支持官方安装器 native patch${NC}"
         echo -e "  运行: ${GREEN}npm install -g node-lief${NC}"
@@ -1635,7 +1671,7 @@ patch_native_binary() {
     # 备份逻辑：仅同版本恢复 backup；版本变化时刷新 backup 为当前版本
     if [ -f "$backup_path" ] && [ -n "${current_version:-}" ] && [ "${current_version:-}" = "${backup_version:-}" ]; then
         echo -e "  从备份恢复原始二进制..."
-        cp "$backup_path" "$binary_path" || {
+        atomic_replace_binary "$backup_path" "$binary_path" || {
             echo -e "${RED}恢复备份失败${NC}"
             return
         }
@@ -1658,12 +1694,14 @@ patch_native_binary() {
     }
 
     local patch_count
+    echo -e "  正在打翻译补丁（视设备性能约 1~5 分钟，期间请勿启动 Claude Code）..."
     patch_count=$("$PLUGIN_SRC/patch-cli.sh" "$tmp_js" 2>/dev/null || echo "0")
 
     if [ "$patch_count" != "0" ]; then
+        echo -e "  正在写回二进制（大文件读写，需要一会儿）..."
         node "$PLUGIN_SRC/bun-binary-io.js" repack "$binary_path" "$tmp_js" || {
             echo -e "${RED}写回二进制失败，正在从备份恢复...${NC}"
-            cp "$backup_path" "$binary_path" 2>/dev/null || true
+            atomic_replace_binary "$backup_path" "$binary_path" || true
             CLI_PATCH_STATUS_SUMMARY="已跳过（原生二进制写回失败）"
             rm -f "$tmp_js"
             return
@@ -1673,7 +1711,7 @@ patch_native_binary() {
         verified_version="$(native_binary_version_from_execution "$binary_path")"
         if [ "${verified_version:-}" != "${current_version:-}" ]; then
             echo -e "${RED}本机启动自检失败，正在从备份恢复...${NC}"
-            cp "$backup_path" "$binary_path" 2>/dev/null || true
+            atomic_replace_binary "$backup_path" "$binary_path" || true
             CLI_PATCH_STATUS_SUMMARY="已跳过（原生二进制本机启动自检失败）"
             rm -f "$tmp_js"
             return
