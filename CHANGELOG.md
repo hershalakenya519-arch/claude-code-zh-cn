@@ -6,6 +6,34 @@
 - **次版本号**：新增功能或显著改进（比如新增 patch、新增翻译）
 - **修订号**：Bug 修复和小调整（比如修正一条翻译）
 
+## [2.7.2] - 2026-07-13
+
+### 新增
+
+- **方法论订正版补翻:抓 CC 源码真字面,不抓屏显展开版**。v2.7.1 从 CC 屏幕显示层抓的整句 patch 命中率低(21 条只 9 中),根因是 CC 屏显经过 `e.replaceAll("+"," + ")` 空格展开,源码里存的是紧凑格式 + 短碎片 + Unicode escape。本版按"源码里 `grep -Fq` 能命中"的黄金标准重抓:
+  - **`?` 快捷键面板短碎片 4 条**:`stash prompt` / `paste images` / `toggle tasks` / ` for verbose output`(带前导空格)—— 这些是 React 组件的碎片,前面 `ctrl+X` 由 CC 运行时拼接,只能翻碎片部分
+  - **`claude agents` 后台面板整句 4 条**:`Sessions that have a question ...` / `Sessions Claude is actively working on — they ...`(注意破折号必须保留 `—` 字面,不是 UTF-8 `—`)/ `Finished sessions wait here for you to review` / `current session`
+  - **主界面底栏碎片 2 条**:`manual mode` / ` for agents`(带前导空格)
+  - **`/verify` skill 描述整句 1 条**:破折号同样保留 `—` 字面
+
+### 修复
+
+- **v2.7.1 里 2 条无法 patch 的硬伤删除**:`\⏎ for newline` 和 `shift + ⏎ for newline`。源码里对应字面是 `\\⏎ for newline`(3 反斜杠 + Unicode escape),JSON 里存"奇数反斜杠 + u"会被 `JSON.parse` 识别为 unicode escape 展开,无法保留字面,只能永远英文。
+
+### 教训归档(供以后翻译贡献者)
+
+- **黄金标准**:任何要加进 `cli-translations.json` 的 en,先在提取出的 `cli.js` 上 `grep -Fq` 一遍,能匹配才加,匹配不到就说明 CC 运行时拼接,永远 patch 不了
+- **Unicode 破折号**:CC 打包时把非 ASCII 字符 escape 成 `\uXXXX` 字面(如 `—` 变成 `—`)。en 里含非 ASCII 时要写 `\\u2014`(JSON 里 2 反斜杠转义)保留字面
+- **奇数反斜杠 + u 硬伤**:JSON 无法存"奇数个反斜杠 + u"字面,只能跳过这类源码字面
+
+### patch 命中数变化(用主人手机同款 arm64 2.1.206 二进制实测)
+
+| 版本 | 翻译表条数 | patch 命中数 |
+|---|---|---|
+| v2.7.0 | 1902 | 1402 |
+| v2.7.1 | 1923 (+21) | 1411 (+9,12 条待 CC 2.1.207+) |
+| **v2.7.2** | **1934 (+11 净)** | **1422 (+11)** |
+
 ## [2.7.1] - 2026-07-13
 
 ### 新增
