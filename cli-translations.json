@@ -7700,5 +7700,49 @@
   {
     "en": "create a util logging.py that...",
     "zh": "创建一个 logging.py 工具,用来..."
+  },
+  {
+    "en": "stash prompt",
+    "zh": "暂存输入"
+  },
+  {
+    "en": "paste images",
+    "zh": "粘贴图片"
+  },
+  {
+    "en": "toggle tasks",
+    "zh": "切换任务面板"
+  },
+  {
+    "en": " for verbose output",
+    "zh": " 显示详细输出"
+  },
+  {
+    "en": "Sessions that have a question or need your decision land here",
+    "zh": "需要你决定或回答的会话都放在这里"
+  },
+  {
+    "en": "Sessions Claude is actively working on \\u2014 they keep running even if you close the terminal",
+    "zh": "Claude 正在跑的会话 —— 关掉终端也不会停"
+  },
+  {
+    "en": "Finished sessions wait here for you to review",
+    "zh": "跑完的会话在这里等你查看"
+  },
+  {
+    "en": "current session",
+    "zh": "当前会话"
+  },
+  {
+    "en": "manual mode",
+    "zh": "手动模式"
+  },
+  {
+    "en": " for agents",
+    "zh": " 查看 Agent"
+  },
+  {
+    "en": "Verify that a code change actually does what it's supposed to by exercising it end-to-end and observing behavior \\u2014 drive the affected flow, not just tests or typecheck. Run before committing nontrivial changes; bootstraps this repo's project verify skill if none exists yet. Don't invoke it on a diff that only touches tests, docs, or other code with no runtime surface to drive (a change to product source always has one) \\u2014 there's nothing to observe.",
+    "zh": "验证代码改动实际做的是不是应该做的 —— 用端到端方式跑受影响的流程,只看行为表现,别只看测试或类型检查。提交非小改动前跑一次;本仓库没配 verify 技能会自动引导初始化。只改测试/文档/无运行入口的代码(改产品源码总有运行入口)时别调 —— 没东西可观察。"
   }
 ]
