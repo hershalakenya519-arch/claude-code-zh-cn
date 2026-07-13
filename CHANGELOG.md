@@ -6,6 +6,16 @@
 - **次版本号**：新增功能或显著改进（比如新增 patch、新增翻译）
 - **修订号**：Bug 修复和小调整（比如修正一条翻译）
 
+## [2.7.1] - 2026-07-13
+
+### 新增
+
+- **补翻 21 条 UI 文案(1902→1923),覆盖主人手机 dsc 反馈的三块显示区**:
+  - **`?` 快捷键面板 10 条**:`! for shell mode` / `shift + tab to auto-accept edits` / `ctrl + o for verbose output` / `ctrl + t to toggle tasks` / `backslash (\) + return (⏎) for newline` / `ctrl + shift + _ to undo` / `ctrl + v to paste images` / `alt + p to switch model` / `ctrl + s to stash prompt` / `ctrl + g to edit in $EDITOR`
+  - **`/` 内置命令描述 7 条**:`/cd` `/design` `/design-login` `/fast` `/model` 描述,以及 `(removed)` 前缀的 `/agents` 说明和 `⚠ sandbox disabled` 提示
+  - **输入框 placeholder 例句 4 条纯字符串**(`Try "..."` 池里不含 `${filepath}` 模板的部分):`fix lint errors` / `fix typecheck errors` / `how do I log an error?` / `create a util logging.py that...`
+- 翻译原则:键盘按键名保留英文(ctrl/shift/alt/esc);命令名保留英文(如 `/resume`);描述文字说人话不生造。带 `${filepath}` 模板的 4 条 placeholder(如 `` `how does ${t} work?` ``)因 patch-cli 内容匹配机制难跨模板,本版未处理。
+
 ## [2.7.0] - 2026-07-12
 
 ### 新增
