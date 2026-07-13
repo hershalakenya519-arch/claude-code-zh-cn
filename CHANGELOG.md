@@ -6,6 +6,23 @@
 - **次版本号**：新增功能或显著改进（比如新增 patch、新增翻译）
 - **修订号**：Bug 修复和小调整（比如修正一条翻译）
 
+## [2.7.3] - 2026-07-13
+
+### 修复(紧急)
+
+- **同步 `plugin/cli-translations.json` 副本到根目录版**。v2.7.1/v2.7.2 只改根目录 `cli-translations.json`,但 `install.sh` 走的是 `plugin/cli-translations.json`(v2.7.0 老版 1902 条)—— 结果主人手机上 install 一直显示 patch=1402(v2.7.0 水平)不涨,以为翻译白改了。本版把两个文件同步。
+- **架构说明**:仓库有**双份** cli-translations.json —— 根目录版 + `plugin/` 副本。`install.sh` 从 `$SCRIPT_DIR/plugin/` 加载,所以 `plugin/` 副本才是 install 真正用的。改翻译必须同步两份。以后 v2.7.4 会在 `install.sh` 或 pre-commit hook 里加同步检查防再犯。
+- **验收方式**:用 `./plugin/patch-cli.sh` 跑(而不是 `./patch-cli.sh`),这样和 install 走同一份翻译表,得到真实 patch 数
+
+### patch 命中数变化(用 `plugin/patch-cli.sh` 实测)
+
+| 版本 | 主人 install 显示 | 铃铃 `plugin/patch-cli.sh` 输出 |
+|---|---|---|
+| v2.7.0 | 1402 | 1402 |
+| v2.7.1(未 sync)| 1402 | 1402(实际根目录版能 1411,但 plugin/ 副本没同步) |
+| v2.7.2(未 sync)| 1402 | 1402(同上,plugin/ 副本没同步) |
+| **v2.7.3** | **应显示 1422** | **1422** |
+
 ## [2.7.2] - 2026-07-13
 
 ### 新增

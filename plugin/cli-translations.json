@@ -7616,5 +7616,133 @@
   {
     "en": "Add Claude Code GitHub Workflow",
     "zh": "添加 Claude Code GitHub 工作流"
+  },
+  {
+    "en": "! for shell mode",
+    "zh": "! 进入 shell 模式"
+  },
+  {
+    "en": "shift + tab to auto-accept edits",
+    "zh": "shift + tab 自动接受编辑"
+  },
+  {
+    "en": "ctrl + o for verbose output",
+    "zh": "ctrl + o 显示详细输出"
+  },
+  {
+    "en": "ctrl + t to toggle tasks",
+    "zh": "ctrl + t 切换任务面板"
+  },
+  {
+    "en": "backslash (\\) + return (⏎) for newline",
+    "zh": "反斜杠 (\\) + 回车 (⏎) 换行"
+  },
+  {
+    "en": "ctrl + shift + _ to undo",
+    "zh": "ctrl + shift + _ 撤销"
+  },
+  {
+    "en": "ctrl + v to paste images",
+    "zh": "ctrl + v 粘贴图片"
+  },
+  {
+    "en": "alt + p to switch model",
+    "zh": "alt + p 切换模型"
+  },
+  {
+    "en": "ctrl + s to stash prompt",
+    "zh": "ctrl + s 暂存输入"
+  },
+  {
+    "en": "ctrl + g to edit in $EDITOR",
+    "zh": "ctrl + g 在 $EDITOR 编辑"
+  },
+  {
+    "en": "(removed) Ask Claude to create/manage subagents, or edit .claude/agents/",
+    "zh": "(已移除) 请 Claude 创建/管理子代理,或编辑 .claude/agents/"
+  },
+  {
+    "en": "Move this session to a new working directory",
+    "zh": "把当前会话切换到新的工作目录"
+  },
+  {
+    "en": "Grant or revoke Claude agent access to your Design projects",
+    "zh": "授权或撤销 Claude 代理访问你的 Design 项目"
+  },
+  {
+    "en": "Authorize design-system access for /design-sync with your claude.ai account",
+    "zh": "用 claude.ai 账号授权 /design-sync 访问 Design 系统"
+  },
+  {
+    "en": "Toggle fast mode (Opus 4.8)",
+    "zh": "切换快速模式 (Opus 4.8)"
+  },
+  {
+    "en": "Set the AI model for Claude Code (currently Opus 4.8 (1M context))",
+    "zh": "设置 Claude Code 用的 AI 模型 (当前 Opus 4.8 (1M 上下文))"
+  },
+  {
+    "en": "⚠ sandbox disabled (⏎ to configure)",
+    "zh": "⚠ 沙箱未启用 (⏎ 配置)"
+  },
+  {
+    "en": "fix lint errors",
+    "zh": "修 lint 错误"
+  },
+  {
+    "en": "fix typecheck errors",
+    "zh": "修类型检查错误"
+  },
+  {
+    "en": "how do I log an error?",
+    "zh": "怎么记录错误日志?"
+  },
+  {
+    "en": "create a util logging.py that...",
+    "zh": "创建一个 logging.py 工具,用来..."
+  },
+  {
+    "en": "stash prompt",
+    "zh": "暂存输入"
+  },
+  {
+    "en": "paste images",
+    "zh": "粘贴图片"
+  },
+  {
+    "en": "toggle tasks",
+    "zh": "切换任务面板"
+  },
+  {
+    "en": " for verbose output",
+    "zh": " 显示详细输出"
+  },
+  {
+    "en": "Sessions that have a question or need your decision land here",
+    "zh": "需要你决定或回答的会话都放在这里"
+  },
+  {
+    "en": "Sessions Claude is actively working on \\u2014 they keep running even if you close the terminal",
+    "zh": "Claude 正在跑的会话 —— 关掉终端也不会停"
+  },
+  {
+    "en": "Finished sessions wait here for you to review",
+    "zh": "跑完的会话在这里等你查看"
+  },
+  {
+    "en": "current session",
+    "zh": "当前会话"
+  },
+  {
+    "en": "manual mode",
+    "zh": "手动模式"
+  },
+  {
+    "en": " for agents",
+    "zh": " 查看 Agent"
+  },
+  {
+    "en": "Verify that a code change actually does what it's supposed to by exercising it end-to-end and observing behavior \\u2014 drive the affected flow, not just tests or typecheck. Run before committing nontrivial changes; bootstraps this repo's project verify skill if none exists yet. Don't invoke it on a diff that only touches tests, docs, or other code with no runtime surface to drive (a change to product source always has one) \\u2014 there's nothing to observe.",
+    "zh": "验证代码改动实际做的是不是应该做的 —— 用端到端方式跑受影响的流程,只看行为表现,别只看测试或类型检查。提交非小改动前跑一次;本仓库没配 verify 技能会自动引导初始化。只改测试/文档/无运行入口的代码(改产品源码总有运行入口)时别调 —— 没东西可观察。"
   }
 ]
