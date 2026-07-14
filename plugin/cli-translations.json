@@ -7744,5 +7744,117 @@
   {
     "en": "Verify that a code change actually does what it's supposed to by exercising it end-to-end and observing behavior \\u2014 drive the affected flow, not just tests or typecheck. Run before committing nontrivial changes; bootstraps this repo's project verify skill if none exists yet. Don't invoke it on a diff that only touches tests, docs, or other code with no runtime surface to drive (a change to product source always has one) \\u2014 there's nothing to observe.",
     "zh": "验证代码改动实际做的是不是应该做的 —— 用端到端方式跑受影响的流程,只看行为表现,别只看测试或类型检查。提交非小改动前跑一次;本仓库没配 verify 技能会自动引导初始化。只改测试/文档/无运行入口的代码(改产品源码总有运行入口)时别调 —— 没东西可观察。"
+  },
+  {
+    "en": "agent is running",
+    "zh": "agent 正在运行"
+  },
+  {
+    "en": "agent has finished",
+    "zh": "agent 已完成"
+  },
+  {
+    "en": "agent completed",
+    "zh": "agent 已完成"
+  },
+  {
+    "en": "agent failed",
+    "zh": "agent 失败"
+  },
+  {
+    "en": "agents running",
+    "zh": "agent 运行中"
+  },
+  {
+    "en": "agent running",
+    "zh": "agent 运行中"
+  },
+  {
+    "en": "background agent",
+    "zh": "后台 agent"
+  },
+  {
+    "en": "background task",
+    "zh": "后台任务"
+  },
+  {
+    "en": "background tasks",
+    "zh": "后台任务"
+  },
+  {
+    "en": "Background agent",
+    "zh": "后台 agent"
+  },
+  {
+    "en": "Background task",
+    "zh": "后台任务"
+  },
+  {
+    "en": "Backgrounded",
+    "zh": "已转入后台"
+  },
+  {
+    "en": "tool output",
+    "zh": "工具输出"
+  },
+  {
+    "en": "running tool",
+    "zh": "正在运行工具"
+  },
+  {
+    "en": "Permission denied",
+    "zh": "权限被拒绝"
+  },
+  {
+    "en": "permission denied",
+    "zh": "权限被拒绝"
+  },
+  {
+    "en": "Access denied",
+    "zh": "访问被拒绝"
+  },
+  {
+    "en": "access denied",
+    "zh": "访问被拒绝"
+  },
+  {
+    "en": "Voice mode",
+    "zh": "语音模式"
+  },
+  {
+    "en": "voice mode",
+    "zh": "语音模式"
+  },
+  {
+    "en": "Exit plan mode",
+    "zh": "退出计划模式"
+  },
+  {
+    "en": "Plan mode is active",
+    "zh": "计划模式已激活"
+  },
+  {
+    "en": "shift+tab to approve",
+    "zh": "shift+tab 批准"
+  },
+  {
+    "en": "shift+tab to change",
+    "zh": "shift+tab 切换"
+  },
+  {
+    "en": "esc to clear",
+    "zh": "esc 清除"
+  },
+  {
+    "en": "esc to go back",
+    "zh": "esc 返回"
+  },
+  {
+    "en": "enter to select",
+    "zh": "enter 选择"
+  },
+  {
+    "en": "enter to open",
+    "zh": "enter 打开"
   }
 ]
