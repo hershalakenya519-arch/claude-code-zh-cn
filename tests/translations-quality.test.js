@@ -69,7 +69,7 @@ test("high-visibility translations use the curated wording", () => {
     ["Press ↑↓ to navigate · Enter to select · Esc to go back", "按 ↑↓ 导航 · 按 Enter 选择 · 按 Esc 返回"],
     ["Press ↑↓ to navigate, Enter to select, Esc to cancel", "按 ↑↓ 导航，按 Enter 选择，按 Esc 取消"],
     ["Hit Enter to queue up additional messages while Claude is working.", "Claude 工作时，按 Enter 可继续排队输入消息。"],
-    ["Your bash commands will be sandboxed. Disable with /sandbox.", "你的 bash 命令将在沙箱中运行。可用 /sandbox 禁用。"],
+    ["Your bash commands will be sandboxed. Disable with /sandbox.", "你的 bash 命令将在沙盒中运行。可用 /sandbox 禁用。"],
     ["say its name to get its take · /buddy pet · /buddy off", "喊它的名字听听它的看法 · /buddy pet · /buddy off"],
     ["Use /clear to start fresh when switching topics and free up context", "切换话题时可用 /clear 重新开始，并释放上下文"],
     ["Cannot block unix domain sockets (see Dependencies tab)", "无法阻止 Unix domain socket（见依赖标签页）"],
