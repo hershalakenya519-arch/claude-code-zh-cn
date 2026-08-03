@@ -899,7 +899,7 @@
       ],
       "representatives": [],
       "requires": [],
-      "verification": "2.1.207 linux-x64 live smoke PASS(native 1395, --version 自检 + --help 中文显示) · 2.1.206 linux-arm64 真机安装 PASS(native 1395, Termux proot glibc 容器, --version 自检)",
+      "verification": "2.1.220 linux-x64 端到端 PASS(native 1435, extract/patch/repack + --version 自检 + --help 中文显示) · 2.1.220 linux-arm64 离线 PASS(native 1435, extract/patch/repack + ELF aarch64 结构完整 + 中文串写入确认;--version 自检因跨架构未跑,装机时由 provisional 现场自检兜底) · 2.1.207 linux-x64 live smoke PASS(native 1395, --version 自检 + --help 中文显示) · 2.1.206 linux-arm64 真机安装 PASS(native 1395, Termux proot glibc 容器, --version 自检)",
       "notes": "Linux ELF native binary experimental：`.bun` 节纯 JS 提取/重打包，不需要 node-lief；暂无已发布验证窗口，可识别版本一律安装时本机自验证（provisional），补丁、重打包或启动自检失败自动保留/恢复英文原版。x64 与 arm64（含 Android Termux proot 容器）均有真机安装证据。"
     },
     "windowsNpmPowerShell": {

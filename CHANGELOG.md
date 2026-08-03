@@ -6,6 +6,36 @@
 - **次版本号**：新增功能或显著改进（比如新增 patch、新增翻译）
 - **修订号**：Bug 修复和小调整（比如修正一条翻译）
 
+## [2.7.4] - 2026-08-03
+
+### 新增
+
+- **截图英文补翻 28 条**(agent 状态 / 后台任务 / 工具输出 / 权限 / 语音 / 计划模式 / 快捷键)。按五条铁律逐条 `grep -Fq` 验证后加入,双份 `cli-translations.json` 同步。
+
+### 修复
+
+- **术语统一「沙箱」→「沙盒」(4 条)**。全表以「沙盒」为准(如 `Sandbox is not enabled` → `沙盒未启用`),此前 4 条漏网写作「沙箱」,其中 `⚠ sandbox disabled (⏎ to configure)` 一条撞了 `translations-quality` 的历史遗留译法红线,导致该测试在 main 上长期失败。现已修复,双份同步。
+  - 同步修正 `tests/translations-quality.test.js` 策划措辞表里同一处笔误(`Your bash commands will be sandboxed...` 期望值,全表 10 处「沙盒」对 1 处「沙箱」);该条对应的英文原文在 CC 2.1.220 中已不存在,属死条目,改动无实际 patch 影响。
+- **文档派生条数同步**:`README.md` / `AGENTS.md` / `CLAUDE.md` 三处写死的翻译条数(1902 / 1934,彼此还不一致)统一刷新为 **1962**,修掉 main 上长期失败的 `doc-derived count sync` 测试。
+- **插件 manifest 双份同步**:`plugin/manifest.json` 与 `plugin/.claude-plugin/plugin.json` 版本号一并升到 2.7.4(只升其一会触发 `plugin manifests keep the same release identity` 失败)。
+
+### 验证(CC 2.1.220 支持确认)
+
+- **Linux 原生二进制 `2.1.220` 端到端全流程通过**,`linuxNativeExperimental` 无 ceiling,2.1.220 走 provisional 自验证不会被守门员拒:
+  - **linux-x64 2.1.220**:`extract`(21.6 MB)→ `patch`(**1435 处**)→ `repack`(275 MB)→ `--version` 启动自检通过 → `--help` 中文正常显示
+  - **linux-arm64 2.1.220**(主人手机同款形态):版本识别 / `extract` / `patch` / `repack` 通过,中文串已确认写入二进制
+- **翻译表对新版几乎无衰减**:字面命中 `2.1.206` = 1423/1938,`2.1.220` = 1410/1938,仅差 13 条。
+
+### ⚠️ 验收方法论修正(给以后的维护者,重要)
+
+- **不能再把原生二进制直接喂给 `patch-cli.sh` 来量命中数**。`patch-cli.js` 只认 JS,不含 native 分支;喂二进制时它按纯文本硬替换,得数完全不可信:
+  | 同一张表 / 同一把刀 | 直接喂二进制 | 走正规 `extract` 后 |
+  |---|---|---|
+  | 2.1.206 | 1425(**假象**,旧结构明文多才碰巧中) | — |
+  | 2.1.220 | **49** | **1435** ✅ |
+- **2.1.206 → 2.1.220 之间上游二进制内部结构已变**,老的"直接替换"路子在新版彻底失效。**唯一可信的验收方式**:`bun-binary-io.js extract` 取出内嵌 JS,对**那份 JS** 跑 `plugin/patch-cli.sh`,再 `repack` + `--version` 自检。
+- 同源现象:`scripts/generate-upstream-text-diff.js` 对 2.1.220 报 `Unsupported package shape`,亦是上游包形态变更所致(该工具待适配,不影响安装流程)。
+
 ## [2.7.3] - 2026-07-13
 
 ### 修复(紧急)
