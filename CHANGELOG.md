@@ -6,6 +6,33 @@
 - **次版本号**：新增功能或显著改进（比如新增 patch、新增翻译）
 - **修订号**：Bug 修复和小调整（比如修正一条翻译）
 
+## [2.7.5] - 2026-08-03
+
+### 新增
+
+- **并入上游 `taekchef/claude-code-zh-cn` v2.9.0 的翻译成果**：翻译表 1962 → **2073 条**（上游独有 111 条 + 本 fork 独有 66 条，两边全保）。
+
+### 只并翻译，不并代码（重要决策）
+
+上游 v2.9.0 也加了 Linux 原生 patch，但能力范围远窄于本 fork：
+
+| | 本 fork | 上游 v2.9.0 |
+|---|---|---|
+| 支持版本 | floor 2.1.113，**无 ceiling** | floor = ceiling = 2.1.220（仅一个版本） |
+| 平台 | linux-x64 **+ linux-arm64** | 仅 linux-x64（notes 明写不支持 arm64/musl） |
+| 额外依赖 | **无**（`.bun` 节纯 JS 手术） | 需 `node-lief >=1.3.0` |
+| provisional 自验证 | 允许 | `allowProvisional: false` |
+
+因此代码侧一律保留本 fork 实现。合并期间实测到两个坑，记录备查：
+
+1. 若把 `bun-binary-io.js` 等取成上游版，会形成「配置声明支持 arm64、代码只认 x64」的不一致状态，arm64 设备直接失效。
+2. 让 git 自动合并双方都改过的脚本会产生**能通过合并、但语法错误**的文件（`scripts/generate-plugin-support-window.js` 出现 `Identifier 'linuxNative' has already been declared`）。
+3. 合并翻译表时**必须保留条目的完整字段**。只取 `en`/`zh` 会丢掉 `skipPatch: "model-prompt-contract"` 标记（两边各 10 条），导致模型提示词被当普通 UI 文案翻译，`preflight` 的 `model prompt contract translations are skipped` 与 `model-facing prompt contract fragments are marked patch-skip` 两项会红。
+
+### 修复
+
+- **术语统一「沙箱」→「沙盒」**：并入上游翻译时连带订正 4 条（含上游独有的 `Allow unsandboxed fallback`）。依据是上游自身 `translations-quality` 策划表 10 处「沙盒」对 1 处「沙箱」，且其禁用词表明禁「沙箱未启用」。
+
 ## [2.7.4] - 2026-08-03
 
 ### 新增
