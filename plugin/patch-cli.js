@@ -918,6 +918,39 @@ function installWorkflowLifecycleResidueLocalization() {
     );
 }
 
+function installSettingsPanelLabelLocalization() {
+    // /status、/config、/usage 打开的统一设置面板，行标签统一用 {label:"X"} 定义。
+    // 这些词裸着出现在源码里几十上百处（Model 136、cwd 147、Version 89），
+    // 走翻译表会连变量名周边的同名字面量一起改；只钉 label: 位置，每个 1-3 处，零误伤。
+    const labels = {
+        Version: "版本",
+        cwd: "工作目录",
+        Organization: "组织",
+        Email: "邮箱",
+        Model: "模型",
+        Profile: "配置档",
+        Channels: "通道",
+        Compliance: "合规",
+        Login: "登录",
+        Memory: "记忆",
+        Theme: "主题",
+        "Auth token": "认证令牌",
+        "API key": "API 密钥",
+        "API provider": "API 提供方",
+        "tmux session": "tmux 会话",
+    };
+    for (const [en, zh] of Object.entries(labels)) {
+        tryReplace(`label:"${en}"`, `label:"${zh}"`);
+    }
+
+    // Session kind 的取值 "interactive"：源码里同名字面量另有一处是遥测的
+    // publishContext 标识，翻掉会污染上报。锚定在 label 上，变量名走通配保持跨版本稳定。
+    tryRegexReplace(
+        /(label:"Session kind",value:!?[A-Za-z0-9_$]+\(\)\?)"interactive"/g,
+        (match, prefix) => `${prefix}"交互式"`
+    );
+}
+
 // === 特殊 patch（基于精确代码模式匹配，安全）===
 // 这些 patch 匹配非常特定的代码模式，不会误伤标识符
 
@@ -932,6 +965,7 @@ for (const step of [
     installEffortAndWorkflowFooterLocalization,
     installCommonVisibleResidueLocalization,
     installWorkflowLifecycleResidueLocalization,
+    installSettingsPanelLabelLocalization,
 ]) {
     try {
         step();

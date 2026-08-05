@@ -6802,10 +6802,6 @@
     "zh": "启动 Claude Code MCP 服务器"
   },
   {
-    "en": "Manage Claude Code plugins",
-    "zh": "管理 Claude Code 插件"
-  },
-  {
     "en": "Scaffold a new plugin at ~/.claude/skills/<name>/ (auto-loads next session as <name>@skills-dir)",
     "zh": "在 ~/.claude/skills/<name>/ 初始化新插件（下次会话自动按 <name>@skills-dir 加载）"
   },
@@ -8300,5 +8296,617 @@
   {
     "en": "enter to open",
     "zh": "enter 打开"
+  },
+  {
+    "en": " navigate \\xB7 ",
+    "zh": " 导航 · "
+  },
+  {
+    "en": " thinking\\u2026",
+    "zh": " 思考中…"
+  },
+  {
+    "en": " \\xB7 ./path/to/marketplace",
+    "zh": " · ./path/to/marketplace"
+  },
+  {
+    "en": " \\xB7 /memory",
+    "zh": " · /memory"
+  },
+  {
+    "en": " \\xB7 /permissions",
+    "zh": " · /permissions"
+  },
+  {
+    "en": " \\xB7 /sandbox",
+    "zh": " · /sandbox"
+  },
+  {
+    "en": " \\xB7 /skills",
+    "zh": " · /skills"
+  },
+  {
+    "en": " \\xB7 Design an implementation strategy",
+    "zh": " · 设计实现策略"
+  },
+  {
+    "en": " \\xB7 Explore the codebase thoroughly",
+    "zh": " · 深入探索代码库"
+  },
+  {
+    "en": " \\xB7 Identify existing patterns",
+    "zh": " · 识别已有模式"
+  },
+  {
+    "en": " \\xB7 Marked for update",
+    "zh": " · 已标记更新"
+  },
+  {
+    "en": " \\xB7 Present a plan for your approval",
+    "zh": " · 提交计划供你审批"
+  },
+  {
+    "en": " \\xB7 Run /reload-plugins to apply",
+    "zh": " · 运行 /reload-plugins 以生效"
+  },
+  {
+    "en": " \\xB7 owner/repo (GitHub)",
+    "zh": " · owner/repo (GitHub)"
+  },
+  {
+    "en": "Adding marketplace to configuration\\u2026",
+    "zh": "正在将插件市场添加到配置中…"
+  },
+  {
+    "en": "Answering\\u2026",
+    "zh": "回答中…"
+  },
+  {
+    "en": "Auto-updating\\u2026",
+    "zh": "自动更新中…"
+  },
+  {
+    "en": "Calling AWS STS and Bedrock\\u2026",
+    "zh": "正在调用 AWS STS 和 Bedrock…"
+  },
+  {
+    "en": "Checking GitHub CLI installation\\u2026",
+    "zh": "检查 GitHub CLI 安装…"
+  },
+  {
+    "en": "Checking for Claude Desktop\\u2026",
+    "zh": "检查 Claude Desktop…"
+  },
+  {
+    "en": "Checking login status\\u2026",
+    "zh": "检查登录状态…"
+  },
+  {
+    "en": "Choose different models\\u2026",
+    "zh": "选择其他模型…"
+  },
+  {
+    "en": "Claude Code reads this from AWS_REGION, not ~/.aws/config \\u2014 set it explicitly even if your profile has a region.",
+    "zh": "Claude Code 从 AWS_REGION 读取此设置，而非 ~/.aws/config — 即使你的 profile 有 region 也需要显式设置。"
+  },
+  {
+    "en": "Claude account with subscription \\xB7",
+    "zh": "Claude 订阅账号 ·"
+  },
+  {
+    "en": "Claude is using your computer \\xB7 press Ctrl+C to stop",
+    "zh": "Claude 正在操作你的电脑 · 按 Ctrl+C 停止"
+  },
+  {
+    "en": "Claude is using your computer \\xB7 press Esc to stop",
+    "zh": "Claude 正在操作你的电脑 · 按 Esc 停止"
+  },
+  {
+    "en": "Compacting conversation\\u2026",
+    "zh": "压缩对话中…"
+  },
+  {
+    "en": "Compaction interrupted \\xB7 This may be due to network issues \\u2014 please try again.",
+    "zh": "压缩中断 · 可能是网络问题，请重试。"
+  },
+  {
+    "en": "Connecting GitHub to Claude\\u2026",
+    "zh": "正在连接 GitHub 到 Claude…"
+  },
+  {
+    "en": "Credit balance too low \\xB7 Add funds: https://platform.claude.com/settings/billing",
+    "zh": "余额不足 · 充值：https://platform.claude.com/settings/billing"
+  },
+  {
+    "en": "Enter to select \\xB7",
+    "zh": "按 Enter 选择 ·"
+  },
+  {
+    "en": "Fetching your Claude Code sessions\\u2026",
+    "zh": "正在获取 Claude Code 会话…"
+  },
+  {
+    "en": "Fetching\\u2026",
+    "zh": "获取中…"
+  },
+  {
+    "en": "Generating QR code\\u2026",
+    "zh": "正在生成二维码…"
+  },
+  {
+    "en": "In progress\\u2026 \\xB7 ",
+    "zh": "进行中… · "
+  },
+  {
+    "en": "Keeping worktree\\u2026",
+    "zh": "保留 worktree…"
+  },
+  {
+    "en": "Loading Claude Code sessions\\u2026",
+    "zh": "正在加载 Claude Code 会话…"
+  },
+  {
+    "en": "Loading conversations\\u2026",
+    "zh": "加载对话中…"
+  },
+  {
+    "en": "Loading environments\\u2026",
+    "zh": "正在加载环境…"
+  },
+  {
+    "en": "Loading guest pass information\\u2026",
+    "zh": "正在加载访客通行证信息…"
+  },
+  {
+    "en": "Loading installed plugins\\u2026",
+    "zh": "正在加载已安装的插件…"
+  },
+  {
+    "en": "Loading marketplaces\\u2026",
+    "zh": "正在加载插件市场…"
+  },
+  {
+    "en": "Loading output styles\\u2026",
+    "zh": "正在加载输出样式…"
+  },
+  {
+    "en": "Loading output\\u2026",
+    "zh": "加载输出中…"
+  },
+  {
+    "en": "Loading session\\u2026",
+    "zh": "正在加载会话…"
+  },
+  {
+    "en": "Loading stats\\u2026",
+    "zh": "正在加载统计…"
+  },
+  {
+    "en": "Loading usage data\\u2026",
+    "zh": "正在加载用量数据…"
+  },
+  {
+    "en": "Loading your Claude Code stats\\u2026",
+    "zh": "正在加载 Claude Code 统计…"
+  },
+  {
+    "en": "Managed by your organization \\u2014 contact your admin",
+    "zh": "由你的组织管理 — 联系管理员"
+  },
+  {
+    "en": "Open System Settings \\u2192 Accessibility",
+    "zh": "打开系统设置 → 辅助功能"
+  },
+  {
+    "en": "Opening Claude Desktop\\u2026",
+    "zh": "打开 Claude Desktop…"
+  },
+  {
+    "en": "Opening Slack app installation page in browser\\u2026",
+    "zh": "正在浏览器中打开 Slack 应用安装页面…"
+  },
+  {
+    "en": "Opening browser to install the Claude GitHub App\\u2026",
+    "zh": "正在打开浏览器安装 Claude GitHub App…"
+  },
+  {
+    "en": "Opening browser to sign in with your Claude account\\u2026",
+    "zh": "正在打开浏览器登录你的 Claude 账号…"
+  },
+  {
+    "en": "Opening browser to sign in\\u2026",
+    "zh": "正在打开浏览器登录…"
+  },
+  {
+    "en": "Opening in Claude Desktop\\u2026",
+    "zh": "在 Claude Desktop 中打开…"
+  },
+  {
+    "en": "Opening sticker page in browser\\u2026",
+    "zh": "正在浏览器中打开贴纸页面…"
+  },
+  {
+    "en": "Opening your options\\u2026",
+    "zh": "打开选项…"
+  },
+  {
+    "en": "Plan \\u2192 Edit \\u2192 Execute",
+    "zh": "计划 → 编辑 → 执行"
+  },
+  {
+    "en": "Please wait\\u2026",
+    "zh": "请稍候…"
+  },
+  {
+    "en": "Preceding messages will be summarized. This and subsequent messages will remain unchanged \\u2014 you will stay at the end of the conversation.",
+    "zh": "前面的消息将被摘要。此消息及后续消息保持不变——你将停留在对话末尾。"
+  },
+  {
+    "en": "Press Enter when ready to verify\\u2026",
+    "zh": "准备好后按 Enter 验证…"
+  },
+  {
+    "en": "Press any key to continue\\u2026",
+    "zh": "按任意键继续…"
+  },
+  {
+    "en": "Processing authentication\\u2026",
+    "zh": "正在处理认证…"
+  },
+  {
+    "en": "Processing changes\\u2026",
+    "zh": "正在处理变更…"
+  },
+  {
+    "en": "Reading ~/.aws/config\\u2026",
+    "zh": "正在读取 ~/.aws/config…"
+  },
+  {
+    "en": "Removed from marketplace \\xB7 reason:",
+    "zh": "已从插件市场移除 · 原因："
+  },
+  {
+    "en": "Removing worktree\\u2026",
+    "zh": "移除 worktree…"
+  },
+  {
+    "en": "Restarting Claude Code to apply the new model\\u2026",
+    "zh": "正在重启 Claude Code 以应用新模型…"
+  },
+  {
+    "en": "Restore and fork the conversation to the point before\\u2026",
+    "zh": "恢复并分支对话到之前的状态…"
+  },
+  {
+    "en": "Restore the code and/or conversation to the point before\\u2026",
+    "zh": "恢复代码和/或对话到之前的状态…"
+  },
+  {
+    "en": "Resuming conversation\\u2026",
+    "zh": "恢复对话中…"
+  },
+  {
+    "en": "Resuming session\\u2026",
+    "zh": "正在恢复会话…"
+  },
+  {
+    "en": "Retrying\\u2026",
+    "zh": "重试中…"
+  },
+  {
+    "en": "Running PostCompact hooks\\u2026",
+    "zh": "运行 PostCompact hooks…"
+  },
+  {
+    "en": "Running PreCompact hooks\\u2026",
+    "zh": "运行 PreCompact hooks…"
+  },
+  {
+    "en": "Running\\u2026",
+    "zh": "运行中…"
+  },
+  {
+    "en": "Save file to continue\\u2026",
+    "zh": "保存文件以继续…"
+  },
+  {
+    "en": "Search settings\\u2026",
+    "zh": "搜索设置…"
+  },
+  {
+    "en": "Sending a test request to Bedrock\\u2026",
+    "zh": "正在向 Bedrock 发送测试请求…"
+  },
+  {
+    "en": "Skip \\u2014 use Claude Code defaults (auto-updates)",
+    "zh": "跳过 — 使用默认值（自动更新）"
+  },
+  {
+    "en": "Starting authentication\\u2026",
+    "zh": "开始认证…"
+  },
+  {
+    "en": "Submitting report\\u2026",
+    "zh": "提交报告中…"
+  },
+  {
+    "en": "Summarizing\\u2026",
+    "zh": "摘要中…"
+  },
+  {
+    "en": "Task is still running\\u2026",
+    "zh": "任务仍在运行…"
+  },
+  {
+    "en": "Teleporting session\\u2026",
+    "zh": "传送会话中…"
+  },
+  {
+    "en": "Teleporting to session\\u2026",
+    "zh": "正在传送到会话…"
+  },
+  {
+    "en": "Type a different name\\u2026",
+    "zh": "输入不同的名称…"
+  },
+  {
+    "en": "Type something\\u2026",
+    "zh": "输入内容…"
+  },
+  {
+    "en": "Updating marketplace\\u2026",
+    "zh": "正在更新插件市场…"
+  },
+  {
+    "en": "Updating\\u2026",
+    "zh": "更新中…"
+  },
+  {
+    "en": "Using token for GitHub Actions setup\\u2026",
+    "zh": "正在使用令牌设置 GitHub Actions…"
+  },
+  {
+    "en": "Validating repository\\u2026",
+    "zh": "验证仓库中…"
+  },
+  {
+    "en": "Verifying it2 can communicate with iTerm2\\u2026",
+    "zh": "验证 it2 与 iTerm2 的通信…"
+  },
+  {
+    "en": "Voice: processing\\u2026",
+    "zh": "语音：处理中…"
+  },
+  {
+    "en": "Waiting for permission\\u2026",
+    "zh": "等待权限确认…"
+  },
+  {
+    "en": "Waiting for the server to confirm completion\\u2026",
+    "zh": "等待服务器确认完成…"
+  },
+  {
+    "en": "indexing\\u2026 ",
+    "zh": "索引中… "
+  },
+  {
+    "en": "keep holding\\u2026",
+    "zh": "请继续按住…"
+  },
+  {
+    "en": "\\xB7 Component summary not available for remote plugin",
+    "zh": "· 远程插件的组件摘要不可用"
+  },
+  {
+    "en": "\\xB7 Components will be discovered at installation",
+    "zh": "· 组件将在安装时被发现"
+  },
+  {
+    "en": "\\xB7 No hook commands will execute",
+    "zh": "· 不会执行任何 hook 命令"
+  },
+  {
+    "en": "\\xB7 Run in another terminal: security unlock-keychain",
+    "zh": "· 在另一个终端运行：security unlock-keychain"
+  },
+  {
+    "en": "\\xB7 StatusLine will not be displayed",
+    "zh": "· 状态栏将不会显示"
+  },
+  {
+    "en": "\\xB7 Tool operations will proceed without hook validation",
+    "zh": "· 工具操作将在不验证 Hook 的情况下执行"
+  },
+  {
+    "en": "\\xB7 What should Claude do instead?",
+    "zh": "· Claude 应该怎么做？"
+  },
+  {
+    "en": "\\xB7 You may need to restart iTerm2 after enabling",
+    "zh": "· 启用后可能需要重启 iTerm2"
+  },
+  {
+    "en": "\\u2022 Update",
+    "zh": "• 更新"
+  },
+  {
+    "en": "\\u2022 Updated",
+    "zh": "• 已更新"
+  },
+  {
+    "en": "\\u2026 diff truncated (exceeded 400 line limit)",
+    "zh": "… diff 已截断（超过 400 行限制）"
+  },
+  {
+    "en": "\\u26A0 Warning: Glob patterns not fully supported on Linux",
+    "zh": "⚠ 警告：Linux 上不完全支持 Glob 模式"
+  },
+  {
+    "en": "\\u2713 Authentication token created successfully!",
+    "zh": "✓ 认证令牌创建成功！"
+  },
+  {
+    "en": "\\u2713 Long-lived authentication token created successfully!",
+    "zh": "✓ 长期认证令牌创建成功！"
+  },
+  {
+    "en": "\\u29C9 In",
+    "zh": "⧉ 在"
+  },
+  {
+    "en": "\\u29C9 open files",
+    "zh": "⧉ 打开文件"
+  },
+  {
+    "en": "\\u29C9 selected lines",
+    "zh": "⧉ 已选行"
+  },
+  {
+    "en": "Neither \\u2014 skip setup",
+    "zh": "都不需要 — 跳过设置"
+  },
+  {
+    "en": "Total cost:            ",
+    "zh": "总花费：               "
+  },
+  {
+    "en": "Total duration (API):  ",
+    "zh": "API 时长：             "
+  },
+  {
+    "en": "Total duration (wall): ",
+    "zh": "实际时长：             "
+  },
+  {
+    "en": "Total code changes:    ",
+    "zh": "代码改动：             "
+  },
+  {
+    "en": "Usage by model:",
+    "zh": "各模型用量："
+  },
+  {
+    "en": "Current session",
+    "zh": "当前会话"
+  },
+  {
+    "en": "Current week (all models)",
+    "zh": "本周（全部模型）"
+  },
+  {
+    "en": "Current week (Sonnet only)",
+    "zh": "本周（仅 Sonnet）"
+  },
+  {
+    "en": "% used",
+    "zh": "% 已用"
+  },
+  {
+    "en": "What's contributing to your limits usage?",
+    "zh": "是什么在消耗你的额度？"
+  },
+  {
+    "en": "Approximate, based on local sessions on this machine \\u2014 does not include other devices or claude.ai",
+    "zh": "基于本机本地会话的估算 —— 不含其他设备或 claude.ai"
+  },
+  {
+    "en": "Approximate, based on local sessions on this machine \\u2014 does not include other devices or claude.ai. Behaviors are independent characteristics, not a breakdown.",
+    "zh": "基于本机本地会话的估算 —— 不含其他设备或 claude.ai。这些特征彼此独立，不是明细拆分。"
+  },
+  {
+    "en": " \\xB7 these are independent characteristics of your usage, not a breakdown",
+    "zh": " · 这些是用量的独立特征，不是明细拆分"
+  },
+  {
+    "en": "Top skills",
+    "zh": "常用 skill"
+  },
+  {
+    "en": "Top subagents",
+    "zh": "常用 subagent"
+  },
+  {
+    "en": "Last 24h",
+    "zh": "最近 24 小时"
+  },
+  {
+    "en": "Last 7d",
+    "zh": "最近 7 天"
+  },
+  {
+    "en": "All time",
+    "zh": "全部时间"
+  },
+  {
+    "en": "Last 7 days",
+    "zh": "最近 7 天"
+  },
+  {
+    "en": "Last 30 days",
+    "zh": "最近 30 天"
+  },
+  {
+    "en": " \\xB7 r to cycle dates \\xB7 ctrl+s to copy",
+    "zh": " · r 换时间段 · ctrl+s 复制"
+  },
+  {
+    "en": "\\u2193 stats",
+    "zh": "↓ 统计"
+  },
+  {
+    "en": "\\u2191 tabs",
+    "zh": "↑ 标签页"
+  },
+  {
+    "en": "Session recap",
+    "zh": "会话回顾"
+  },
+  {
+    "en": "Ultracode keyword trigger",
+    "zh": "Ultracode 关键词触发"
+  },
+  {
+    "en": "Worktree base ref",
+    "zh": "Worktree 基准 ref"
+  },
+  {
+    "en": "Skip the /copy picker",
+    "zh": "跳过 /copy 选择器"
+  },
+  {
+    "en": "Auto-scroll",
+    "zh": "自动滚动"
+  },
+  {
+    "en": "Open agents view by default",
+    "zh": "默认打开 Agent 视图"
+  },
+  {
+    "en": " opens agents",
+    "zh": " 键打开 Agent 视图"
+  },
+  {
+    "en": "Switch models when a message is flagged",
+    "zh": "消息被标记时切换模型"
+  },
+  {
+    "en": "Session kind",
+    "zh": "会话类型"
+  },
+  {
+    "en": "background job \\xB7 unattended",
+    "zh": "后台任务 · 无人值守"
+  },
+  {
+    "en": "background job \\xB7 attached",
+    "zh": "后台任务 · 已连接"
+  },
+  {
+    "en": "Paused for this session \\xB7 /pause-memory to resume",
+    "zh": "本次会话已暂停 · /pause-memory 恢复"
+  },
+  {
+    "en": "Expired \\u2014 log in again",
+    "zh": "已过期 —— 请重新登录"
   }
 ]

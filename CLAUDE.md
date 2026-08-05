@@ -5,7 +5,7 @@ Claude Code CLI 中文本地化插件。
 ## 项目结构
 
 - `patch-cli.sh` — CLI 硬编码文字 patch（被 install.sh 和 session-start hook 调用）
-- `cli-translations.json` — 2073 条 UI 翻译对照表（英文→中文），patch-cli.sh 从此文件读取
+- `cli-translations.json` — 2225 条 UI 翻译对照表（英文→中文），patch-cli.sh 从此文件读取
 - `install.sh` / `uninstall.sh` — 安装/卸载脚本
 - `compute-patch-revision.sh` — patch 规则指纹计算，供 install.sh 和 session-start hook 共用
 - `settings-overlay.json` — 合并到 settings.json 的中文设置（只含 language、spinnerTipsEnabled 等独有配置，**不含** verbs 和 tips 数据）
@@ -29,7 +29,18 @@ Claude Code CLI 中文本地化插件。
 
 - patch-cli.sh 使用**内容匹配**（匹配英文原文），不依赖变量名，跨版本稳定
 - 从 `cli-translations.json` 批量读取翻译，按字符串长度**降序**替换（长字符串优先，避免子串冲突）
-- cli.js 里的 `…` 是真实 U+2026 字符，不是 `\u2026` 转义序列
+- ⚠️ **非 ASCII 字符有两种形态，取决于安装形态，别只按一种写翻译**：
+  - **npm 版 cli.js** — `…` `·` `—` 都是**真实字符**（U+2026 等）
+  - **原生二进制**（`bun-binary-io.js extract` 出来的 JS，主流安装形态）— 一律是**字面转义序列**：
+    `·`→`\xB7`、`…`→`\u2026`、emoji→代理对 `\uD83D\uDCDD`，**十六进制字母大写**，≤0xFF 用 `\xXX`
+  - 所以同一条翻译要**两种形态各存一条**，否则在原生二进制上静默失效（v2.7.6 前有 117 条这样哑火）
+  - 新增前务必实测：`node bun-binary-io.js extract <二进制> /tmp/x.js`，再去 x.js 里 grep 确认形态
+- ⚠️ **短词绝不能裸加进翻译表**：替换虽只在字符串字面量内做、且有词边界保护，但同名字面量遍布全库——
+  实测 `Session` 260 处、`interactive` 178 处、`cwd` 147 处、`Model` 136 处、`Version` 89 处。
+  UI 行标签一律走**结构化定向替换**（`installSettingsPanelLabelLocalization` 锚 `label:"X"`，每个仅 1-3 处）。
+  尤其注意 `"interactive"` 另有一处是遥测 `publishContext` 标识，翻掉会污染上报数据
+- ⚠️ **patch 输出的数字是「命中规则条数」不是「替换位置数」**（`if (hit) count++`，每条规则只计 1 次）。
+  要量真实影响面：给候选发唯一哨兵串 → 跑一次 patch → 数哨兵出现次数
 - node -e 在 bash 单引号里，用 Unicode 转义（`\uXXXX`）写中文，避免引号嵌套问题
 - Hook 等技术术语保留英文（Hook 不是"钩子"，同 API、PR）
 - Windows 兼容：NTFS 上 `fs.renameSync` 先 unlink 再 rename
