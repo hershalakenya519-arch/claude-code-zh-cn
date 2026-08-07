@@ -886,6 +886,47 @@ function installEffortAndWorkflowFooterLocalization() {
     );
 }
 
+
+
+function installStatuslineModeResidueLocalization() {
+    // 底栏模式：indicator 后硬拼的 " on" → 去掉（避免「接受编辑 on」）
+    // 源码仅 Rme(...) 两处，用精确子串安全
+    tryReplace('," on"', "");
+    // 切换模式通知：`[${Rme(x)} on]` → `[${Rme(x)}]`
+    tryRegexReplace(
+        /`\[\$\{(Rme\([^`]+?\))\} on\]`/g,
+        (match, call) => "`[${" + call + "}]`"
+    );
+
+    // 快捷键提示 He：`esc to interrupt` / `↓ to manage`
+    // 只改 He 组件 children 形态，不碰 "path from X to Y" 等
+    tryRegexReplace(
+        /\["\(",([A-Za-z0-9_$]+)," to ",([A-Za-z0-9_$]+),"\)"\]/g,
+        (match, key, action) => `["(",${key}," ",${action},")"]`
+    );
+    tryRegexReplace(
+        /children:\[([A-Za-z0-9_$]+)," to ",([A-Za-z0-9_$]+)\]/g,
+        (match, key, action) => `children:[${key}," ",${action}]`
+    );
+
+    // He 的 action 即展示文案；短词定向替换
+    tryReplace('action:"interrupt"', 'action:"中断"');
+    tryReplace('action:"manage"', 'action:"管理"');
+    tryReplace('"hide tasks"', '"隐藏任务"');
+    tryReplace('"show tasks"', '"显示任务"');
+
+    // 复数任务计数模板（单数 1 shell 走翻译表）
+    tryRegexReplace(
+        /\$\{([A-Za-z0-9_$]+)\} shells/g,
+        (match, n) => "${" + n + "} 个 Shell"
+    );
+    tryRegexReplace(
+        /\$\{([A-Za-z0-9_$]+)\} monitors/g,
+        (match, n) => "${" + n + "} 个监控"
+    );
+}
+
+
 function installCommonVisibleResidueLocalization() {
     tryRegexReplace(
         /([A-Za-z0-9_$]+(?:\.default)?)\.createElement\(([A-Za-z0-9_$]+),null,\1\.createElement\(([A-Za-z0-9_$]+),\{chord:"enter",action:"confirm"\}\),\1\.createElement\(\3,\{chord:"escape",action:"cancel"\}\)\)/g,
@@ -951,6 +992,24 @@ function installSettingsPanelLabelLocalization() {
     );
 }
 
+function installSettingsTabTitleLocalization() {
+    // /config 设置面板的五个 tab 标题 + 插件面板/另一设置面板各一个,title:"X" 全库仅 7 处、
+    // 全是显示文本;内部 key 走第三参数("status"/"config"…)和 defaultTab:"Config" 比较,不冲突。
+    const tabs = {
+        Settings: "设置",
+        Status: "状态",
+        Config: "配置",
+        Usage: "用量",
+        Stats: "统计",
+    };
+    for (const [en, zh] of Object.entries(tabs)) {
+        tryReplace(`title:"${en}"`, `title:"${zh}"`);
+    }
+
+    // Language 设置行:裸词全局替换会误伤 Accept-Language/Content-Language HTTP 头,只钉 label 位置
+    tryReplace(`label:"Language"`, `label:"语言"`);
+}
+
 // === 特殊 patch（基于精确代码模式匹配，安全）===
 // 这些 patch 匹配非常特定的代码模式，不会误伤标识符
 
@@ -963,9 +1022,11 @@ for (const step of [
     installDurationFormatterLocalization,
     installIssue80VisibleResidueLocalization,
     installEffortAndWorkflowFooterLocalization,
+    installStatuslineModeResidueLocalization,
     installCommonVisibleResidueLocalization,
     installWorkflowLifecycleResidueLocalization,
     installSettingsPanelLabelLocalization,
+    installSettingsTabTitleLocalization,
 ]) {
     try {
         step();
