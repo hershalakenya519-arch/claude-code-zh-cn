@@ -804,3 +804,39 @@ test("issue 122 slash and prompt command descriptions are translated", () => {
     assert.match(patched, new RegExp(zh.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
 });
+
+test("statusline mode residue drops on suffix and localizes key hints", () => {
+  const patched = patchFixture([
+    'function Rme(e){return I8r(e).indicator}',
+    'const modeLine=Un.jsxs(y,{children:[L$e(Aie)," ",Rme(Aie)," on",_If]});',
+    'const modeLine2=Un.jsxs(y,{children:[L$e(Aie)," ",Rme(Aie)," on",ZHn]});',
+    'NZr(`[${Rme(Kt)} on]`);',
+    'function He(V30){return wgt.jsxs($m,{children:["(",run," to ",tun,")"]})}',
+    'function He2(){return wgt.jsxs($m,{children:[run," to ",tun]})}',
+    'const a=Un.jsx(He,{chord:t,action:"interrupt",format:{keyCase:"lower"}});',
+    'const b=Un.jsx(He,{chord:"down",action:"manage",parens:!0});',
+    'const yIf=HIv==="tasks"?"hide tasks":"show tasks";',
+    'if(o>0)i.push(o===1?"1 shell":`${o} shells`);',
+    'if(n>0)i.push(n===1?"1 monitor":`${n} monitors`);',
+    'Acc={plan:{indicator:"plan mode"},auto:{indicator:"auto mode"},dontAsk:{indicator:"don\'t ask"},bypassPermissions:{indicator:"bypass permissions"},default:{indicator:"manual mode"},acceptEdits:{indicator:"accept edits"}};',
+  ]);
+
+  assert.equal(patched.includes('Rme(Aie)," on"'), false, patched);
+  assert.equal(patched.includes("Rme(Aie)"), true, patched);
+  assert.equal(patched.includes("NZr(`[${Rme(Kt)} on]`)"), false, patched);
+  assert.equal(patched.includes("NZr(`[${Rme(Kt)}]`)"), true, patched);
+  assert.equal(patched.includes('," to ",'), false, patched);
+  assert.equal(patched.includes('action:"中断"'), true, patched);
+  assert.equal(patched.includes('action:"管理"'), true, patched);
+  assert.equal(patched.includes('"隐藏任务"'), true, patched);
+  assert.equal(patched.includes('"显示任务"'), true, patched);
+  assert.equal(patched.includes("1 个 Shell"), true, patched);
+  assert.equal(patched.includes("${o} 个 Shell"), true, patched);
+  assert.equal(patched.includes('indicator:"计划模式"'), true, patched);
+  assert.equal(patched.includes('indicator:"自动模式"'), true, patched);
+  assert.equal(patched.includes('indicator:"不再询问"'), true, patched);
+  assert.equal(patched.includes('indicator:"跳过权限检查"'), true, patched);
+  assert.equal(patched.includes('indicator:"手动模式"'), true, patched);
+  assert.equal(patched.includes('indicator:"接受编辑"'), true, patched);
+});
+

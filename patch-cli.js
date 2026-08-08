@@ -975,6 +975,7 @@ function installSettingsPanelLabelLocalization() {
         Login: "登录",
         Memory: "记忆",
         Theme: "主题",
+        "Output style": "输出风格",
         "Auth token": "认证令牌",
         "API key": "API 密钥",
         "API provider": "API 提供方",

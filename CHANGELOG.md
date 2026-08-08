@@ -6,6 +6,20 @@
 - **次版本号**：新增功能或显著改进（比如新增 patch、新增翻译）
 - **修订号**：Bug 修复和小调整（比如修正一条翻译）
 
+## [2.7.8] - 2026-08-08
+
+### 新增 / 修复
+
+- **统一设置面板 `/config` 词条大补**：设置项名、用量页书名类文案、提示行等进翻译表（根与 `plugin/` 同步）。
+- **五个 tab 标题结构补丁**：`Settings/Status/Config/Usage/Stats` → `设置/状态/配置/用量/统计`（`title:"…"` 定向，不碰内部 key）。
+- **并入 v2.7.7 底栏权限模式状态行**：去掉模式名后硬拼 ` on`；`esc to interrupt` / `↓ to manage`；`1 shell` / `N shells` 等碎片。
+- **用量对比句模板**：`${Math.floor(s)}` 与书名占位符**保持英文原顺序**，避免「《12》/《基督山伯爵》x 倍」错位。
+
+### 安装注意（手机 dsc）
+
+- 主人 `dsc` 实际跑 **`/opt/claudebin/claude`**，不是 PATH 里的 `~/.local/share/claude/versions/…`。
+- 安装请：`ZH_CN_REAL_CLAUDE=/opt/claudebin/claude bash install.sh`（或保证 detect 命中该路径）。
+
 ## [2.7.6] - 2026-08-05
 
 ### 修复

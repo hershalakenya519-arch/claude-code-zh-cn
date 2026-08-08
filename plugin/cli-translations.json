@@ -8908,5 +8908,1029 @@
   {
     "en": "Expired \\u2014 log in again",
     "zh": "已过期 —— 请重新登录"
+  },
+  {
+    "en": "plan mode",
+    "zh": "计划模式"
+  },
+  {
+    "en": "auto mode",
+    "zh": "自动模式"
+  },
+  {
+    "en": "don't ask",
+    "zh": "不再询问"
+  },
+  {
+    "en": "bypass permissions",
+    "zh": "跳过权限检查"
+  },
+  {
+    "en": "1 shell",
+    "zh": "1 个 Shell"
+  },
+  {
+    "en": "1 monitor",
+    "zh": "1 个监控"
+  },
+  {
+    "en": "show tasks",
+    "zh": "显示任务"
+  },
+  {
+    "en": "hide tasks",
+    "zh": "隐藏任务"
+  },
+  {
+    "en": "Local notifications",
+    "zh": "本地通知"
+  },
+  {
+    "en": "Push when actions required",
+    "zh": "有操作待办时推送"
+  },
+  {
+    "en": "Push when Claude decides",
+    "zh": "Claude 决定行动时推送"
+  },
+  {
+    "en": "For custom styles, open /config.",
+    "zh": "自定义样式请打开 /config。"
+  },
+  {
+    "en": "Default (English)",
+    "zh": "默认(英语)"
+  },
+  {
+    "en": "Any language name or ISO code (e.g. 'ja'); use 'default' for English.",
+    "zh": "输入任意语言名或 ISO 代码(如 'ja');用 'default' 恢复英语。"
+  },
+  {
+    "en": "Question auto-continue timeout",
+    "zh": "提问自动继续超时"
+  },
+  {
+    "en": "Show last response in external editor",
+    "zh": "在外部编辑器中显示最后一条响应"
+  },
+  {
+    "en": "Show responses in IDE",
+    "zh": "在 IDE 中显示响应"
+  },
+  {
+    "en": "For custom themes, use /theme.",
+    "zh": "自定义主题请使用 /theme。"
+  },
+  {
+    "en": "For a specific model ID, use /model.",
+    "zh": "指定模型 ID 请使用 /model。"
+  },
+  {
+    "en": "For a specific model ID, open /config.",
+    "zh": "指定模型 ID 请打开 /config。"
+  },
+  {
+    "en": "Teammate mode",
+    "zh": "协作伙伴模式"
+  },
+  {
+    "en": "Teammate mode [overridden: ${q}]",
+    "zh": "协作伙伴模式 [已被 ${q} 覆盖]"
+  },
+  {
+    "en": "Use custom API 密钥: ",
+    "zh": "使用自定义 API 密钥: "
+  },
+  {
+    "en": "Synced project memory (this directory; applies next session)",
+    "zh": "同步项目记忆(此目录;下次会话生效)"
+  },
+  {
+    "en": "Synced project memory writes (enable reads first)",
+    "zh": "同步项目记忆写入(需先启用读取)"
+  },
+  {
+    "en": "Synced project memory writes (this directory; applies next session)",
+    "zh": "同步项目记忆写入(此目录;下次会话生效)"
+  },
+  {
+    "en": "Precompute compaction",
+    "zh": "预计算压缩摘要"
+  },
+  {
+    "en": "Show message timestamps",
+    "zh": "显示消息时间戳"
+  },
+  {
+    "en": "Worktree 基准 ref",
+    "zh": "工作树基准 ref"
+  },
+  {
+    "en": "动态工作流 size",
+    "zh": "动态工作流大小"
+  },
+  {
+    "en": "Auto (match terminal)",
+    "zh": "自动(匹配终端)"
+  },
+  {
+    "en": "Terminal Bell ",
+    "zh": "终端响铃 "
+  },
+  {
+    "en": "iTerm2 w/ Bell",
+    "zh": "iTerm2 带响铃"
+  },
+  {
+    "en": "Changing thinking mode mid-conversation will increase latency and may reduce quality.",
+    "zh": "会话中途更改思考模式会增加延迟并可能降低质量。"
+  },
+  {
+    "en": "Invalid selection \"${gOS}\". Enter a number between 1 and ${Xtt.length}.",
+    "zh": "无效选择 \"${gOS}\"。请输入 1 到 ${Xtt.length} 之间的数字。"
+  },
+  {
+    "en": "Enter a number to change [1-",
+    "zh": "输入数字更改 [1-"
+  },
+  {
+    "en": " (aim for <",
+    "zh": " (目标 <"
+  },
+  {
+    "en": " agents)",
+    "zh": " 个代理)"
+  },
+  {
+    "en": " (default)",
+    "zh": " (默认)"
+  },
+  {
+    "en": "disabled (",
+    "zh": "已禁用 ("
+  },
+  {
+    "en": " Error installing ",
+    "zh": " 安装"
+  },
+  {
+    "en": "Connected to ${o} ${i} version ${t.installedVersion} (server version: ${n.serverInfo?.version})",
+    "zh": "已连接到 ${o} ${i} 版本 ${t.installedVersion} (服务器版本: ${n.serverInfo?.version})"
+  },
+  {
+    "en": "Connected to ${o} ${i} version ${t.installedVersion}",
+    "zh": "已连接到 ${o} ${i} 版本 ${t.installedVersion}"
+  },
+  {
+    "en": "Installed ${o} ${i}",
+    "zh": "已安装 ${o} ${i}"
+  },
+  {
+    "en": "Connected to ${o} extension",
+    "zh": "已连接到 ${o} 扩展"
+  },
+  {
+    "en": "未连接 to ${o}",
+    "zh": "未连接到 ${o}"
+  },
+  {
+    "en": "${n.connected} connected",
+    "zh": "${n.connected} 个已连接"
+  },
+  {
+    "en": "${n.cached} cached",
+    "zh": "${n.cached} 个已缓存"
+  },
+  {
+    "en": "${n.needsAuth} need auth",
+    "zh": "${n.needsAuth} 个需要认证"
+  },
+  {
+    "en": "${n.disabled} disabled",
+    "zh": "${n.disabled} 个已禁用"
+  },
+  {
+    "en": "${n.failed} failed",
+    "zh": "${n.failed} 个失败"
+  },
+  {
+    "en": "Listening for messages from ${s}",
+    "zh": "正在监听来自 ${s} 的消息"
+  },
+  {
+    "en": "Configured but not active (${a}): ${s}",
+    "zh": "已配置但未激活 (${a}): ${s}"
+  },
+  {
+    "en": "not available on third-party providers",
+    "zh": "第三方提供方不支持"
+  },
+  {
+    "en": "not currently available",
+    "zh": "当前不可用"
+  },
+  {
+    "en": "blocked by org policy",
+    "zh": "已被组织策略阻止"
+  },
+  {
+    "en": "${e.subscription} account",
+    "zh": "${e.subscription} 账号"
+  },
+  {
+    "en": "Default (${cao()})",
+    "zh": "默认 (${cao()})"
+  },
+  {
+    "en": "Default (${a0()})",
+    "zh": "默认 (${a0()})"
+  },
+  {
+    "en": "Command line arguments",
+    "zh": "命令行参数"
+  },
+  {
+    "en": "CLI tool narrowing",
+    "zh": "CLI 工具收窄"
+  },
+  {
+    "en": "MCP server policy",
+    "zh": "MCP 服务器策略"
+  },
+  {
+    "en": "ZDR (Zero Data Retention)",
+    "zh": "ZDR (零数据保留)"
+  },
+  {
+    "en": "Bedrock service tier",
+    "zh": "Bedrock 服务层级"
+  },
+  {
+    "en": "AWS auth skipped",
+    "zh": "AWS 认证已跳过"
+  },
+  {
+    "en": "GCP auth skipped",
+    "zh": "GCP 认证已跳过"
+  },
+  {
+    "en": "Microsoft Foundry auth skipped",
+    "zh": "Microsoft Foundry 认证已跳过"
+  },
+  {
+    "en": "Claude Platform on AWS base URL",
+    "zh": "Claude Platform on AWS 基础 URL"
+  },
+  {
+    "en": "Claude Platform on AWS auth skipped",
+    "zh": "Claude Platform on AWS 认证已跳过"
+  },
+  {
+    "en": "Claude Platform on Google Cloud base URL",
+    "zh": "Claude Platform on Google Cloud 基础 URL"
+  },
+  {
+    "en": "Claude Platform on Google Cloud auth skipped",
+    "zh": "Claude Platform on Google Cloud 认证已跳过"
+  },
+  {
+    "en": "Amazon Bedrock (Mantle) auth skipped",
+    "zh": "Amazon Bedrock (Mantle) 认证已跳过"
+  },
+  {
+    "en": "${r.replace(/\\p{Cc}/gu,\"\")} (invalid — ignored; fix or unset the proxy env var)",
+    "zh": "${r.replace(/\\p{Cc}/gu,\"\")} (无效 — 已忽略;请修复或取消设置代理环境变量)"
+  },
+  {
+    "en": "${e} (from AWS config)",
+    "zh": "${e} (来自 AWS 配置)"
+  },
+  {
+    "en": "${e} (default — set AWS_REGION or add a region to your AWS config)",
+    "zh": "${e} (默认 — 请设置 AWS_REGION 或在 AWS 配置中添加区域)"
+  },
+  {
+    "en": "System diagnostics",
+    "zh": "系统诊断"
+  },
+  {
+    "en": "Found invalid entries in: ${o}.",
+    "zh": "在 ${o} 中发现无效条目。"
+  },
+  {
+    "en": "Transcript retention cleanup is paused until the settings errors above are fixed (cleanupPeriodDays cannot be determined reliably).",
+    "zh": "转录保留清理已暂停,直到修复上述设置错误(无法可靠确定 cleanupPeriodDays)。"
+  },
+  {
+    "en": "No write permissions for auto-updates",
+    "zh": "没有自动更新的写入权限"
+  },
+  {
+    "en": "${t} — nothing will run unwrapped: new background sessions are refused unless a background service that validated an earlier value is still serving them (\\`claude daemon status\\` shows it)",
+    "zh": "${t} — 将不会有任何进程在未包装状态下运行:除非已有通过校验的旧值的后台服务仍在服务它们,否则新的后台会话会被拒绝(\\`claude daemon status\\` 可查看)"
+  },
+  {
+    "en": "Self-exec: \\`${[n.cmd,...n.prefixArgs].join(\" \")}\\` (CLAUDE_CODE_PROCESS_WRAPPER)",
+    "zh": "自执行: \\`${[n.cmd,...n.prefixArgs].join(\" \")}\\` (CLAUDE_CODE_PROCESS_WRAPPER)"
+  },
+  {
+    "en": "The launcher \\`${n.cmd}\\` cannot run right now (deleted or not executable) — new background sessions are refused until it is restored; a background service that validated it earlier keeps serving its existing sessions (\\`claude daemon status\\`)",
+    "zh": "启动器 \\`${n.cmd}\\` 当前无法运行(已删除或不可执行) — 在恢复之前,新的后台会话会被拒绝;之前验证过它的后台服务会继续服务其现有会话(\\`claude daemon status\\`)"
+  },
+  {
+    "en": "The installed background service predates launcher support and runs outside \\`${n.cmd}\\`; its sessions are covered, the service process itself is not — a launcher-aware \\`claude daemon install\\` will close this",
+    "zh": "已安装的后台服务早于启动器支持,在 \\`${n.cmd}\\` 之外运行;其会话受覆盖,但服务进程本身不受 — 用支持启动器的 \\`claude daemon install\\` 可修复"
+  },
+  {
+    "en": "The running background service launches sessions via \\`${c||\"(no launcher)\"}\\`, but this session resolves \\`${e}\\` — restart it (and your running claude sessions) to converge",
+    "zh": "正在运行的后台服务通过 \\`${c||\"(no launcher)\"}\\` 启动会话,但本会话解析为 \\`${e}\\` — 重启它(以及你正在运行的 claude 会话)以收敛一致"
+  },
+  {
+    "en": "Large ${i} will impact performance (${od(o.content.length)} chars > ${od(n)})",
+    "zh": "较大的 ${i} 将影响性能(${od(o.content.length)} 字符 > ${od(n)})"
+  },
+  {
+    "en": "Native installation exists but ${p} is not in your PATH. Add it by opening: System Properties → 环境变量 → Edit User PATH → New → Add the path above. Then restart your terminal.",
+    "zh": "检测到原生安装,但 ${p} 不在你的 PATH 中。请打开:系统属性 → 环境变量 → 编辑用户 PATH → 新建 → 添加上面的路径,然后重启终端。"
+  },
+  {
+    "en": "Native installation exists but ~/.local/bin is not in your PATH. Run:\\n\\necho 'export PATH=\"$HOME/.local/bin:$PATH\"' >> ${h} && source ${h}",
+    "zh": "检测到原生安装,但 ~/.local/bin 不在你的 PATH 中。运行:\\n\\necho 'export PATH=\"$HOME/.local/bin:$PATH\"' >> ${h} && source ${h}"
+  },
+  {
+    "en": "Native installation exists but ${p} is not in your PATH",
+    "zh": "检测到原生安装,但 ${p} 不在你的 PATH 中"
+  },
+  {
+    "en": "Native installation exists but ~/.local/bin is not in your PATH",
+    "zh": "检测到原生安装,但 ~/.local/bin 不在你的 PATH 中"
+  },
+  {
+    "en": "Leftover npm global installation at ${S.path}",
+    "zh": "在 ${S.path} 有残留的 npm 全局安装"
+  },
+  {
+    "en": "Orphaned npm global package at ${S.path}",
+    "zh": "在 ${S.path} 有孤立的 npm 全局包"
+  },
+  {
+    "en": "Leftover npm local installation at ${S.path}",
+    "zh": "在 ${S.path} 有残留的 npm 本地安装"
+  },
+  {
+    "en": "Can't auto-update: npm global folder isn't writable",
+    "zh": "无法自动更新:npm 全局文件夹不可写"
+  },
+  {
+    "en": "Glob patterns in sandbox permission rules are not fully supported on Linux",
+    "zh": "Linux 上不完全支持沙箱权限规则中的 glob 模式"
+  },
+  {
+    "en": "managed-settings.json: strictPluginOnlyCustomization has an invalid value (expected true or an array, got ${typeof u})",
+    "zh": "managed-settings.json: strictPluginOnlyCustomization 的值无效(应为 true 或数组,实际为 ${typeof u})"
+  },
+  {
+    "en": "managed-settings.json: strictPluginOnlyCustomization has ${m.length} value(s) this client doesn't recognize: ${m.map(String).join(\", \")}",
+    "zh": "managed-settings.json: strictPluginOnlyCustomization 有 ${m.length} 个此客户端无法识别的值:${m.map(String).join(\", \")}"
+  },
+  {
+    "en": "otelHeadersHelper is configured but its last invocation failed: ${n}",
+    "zh": "otelHeadersHelper 已配置,但上次调用失败:${n}"
+  },
+  {
+    "en": "${u} was not created by the native installer (it is not a symlink into the versions/ directory), so auto-update leaves it untouched.",
+    "zh": "${u} 不是由原生安装器创建的(它不是指向 versions/ 目录的符号链接),因此自动更新不会动它。"
+  },
+  {
+    "en": "Running from local installation but config install method is '${o.installMethod??\"not set\"}'",
+    "zh": "正在从本地安装运行,但配置的安装方式为 '${o.installMethod??\"not set\"}'"
+  },
+  {
+    "en": "Running native installation but config install method is '${o.installMethod??\"not set\"}'",
+    "zh": "正在运行原生安装,但配置的安装方式为 '${o.installMethod??\"not set\"}'"
+  },
+  {
+    "en": " (remote)",
+    "zh": "（远程）"
+  },
+  {
+    "en": "Loading remote cost…",
+    "zh": "正在加载远程费用…"
+  },
+  {
+    "en": "Remote cost unavailable",
+    "zh": "远程费用不可用"
+  },
+  {
+    "en": "Remote cost unavailable (",
+    "zh": "远程费用不可用（"
+  },
+  {
+    "en": " as of ",
+    "zh": "（截至 "
+  },
+  {
+    "en": "Failed to load usage data",
+    "zh": "加载用量数据失败"
+  },
+  {
+    "en": "Claude Code and Cowork credit",
+    "zh": "Claude Code 与 Cowork 点数"
+  },
+  {
+    "en": "One-time credit \\xB7 Expires ",
+    "zh": "一次性点数 · 到期 "
+  },
+  {
+    "en": "Refreshing…",
+    "zh": "正在刷新…"
+  },
+  {
+    "en": "Resets ",
+    "zh": "重置于 "
+  },
+  {
+    "en": "Showing last-known usage",
+    "zh": "显示上次已知用量"
+  },
+  {
+    "en": " (rate limited — try again in a moment)",
+    "zh": "（已被限流——请稍后再试）"
+  },
+  {
+    "en": " (could not refresh)",
+    "zh": "（无法刷新）"
+  },
+  {
+    "en": "Per-model breakdown unavailable (rate limited — try again in a moment)",
+    "zh": "无法提供按模型细分（已被限流——请稍后再试）"
+  },
+  {
+    "en": "Could not refresh usage data",
+    "zh": "无法刷新用量数据"
+  },
+  {
+    "en": "Usage endpoint is rate limited. Please try again in a moment.",
+    "zh": "用量接口被限流，请稍后再试。"
+  },
+  {
+    "en": "Unlimited",
+    "zh": "无限"
+  },
+  {
+    "en": " spent",
+    "zh": " 已用"
+  },
+  {
+    "en": "使用额度 are off \\xB7 /usage-credits to turn them on",
+    "zh": "使用额度已关闭 · 用 /usage-credits 开启"
+  },
+  {
+    "en": "% of usage",
+    "zh": "用量占比"
+  },
+  {
+    "en": "Scanning local sessions…",
+    "zh": "正在扫描本地会话…"
+  },
+  {
+    "en": "Nothing over ",
+    "zh": "此期间没有超过 "
+  },
+  {
+    "en": "% in this period — try the other window.",
+    "zh": "% 的项目——试试另一个时间窗口。"
+  },
+  {
+    "en": "No attribution data yet \\xB7 accumulates as you use Claude",
+    "zh": "暂无归因数据 · 会随你使用 Claude 逐渐积累"
+  },
+  {
+    "en": "Skills, subagents, plugins, and MCP 服务器",
+    "zh": "技能、子代理、插件和 MCP 服务器"
+  },
+  {
+    "en": "If this runs frequently, consider configuring its subagents with a cheaper model or tightening their prompts.",
+    "zh": "如果它经常运行，可考虑为子代理配置更便宜的模型，或收紧它们的提示词。"
+  },
+  {
+    "en": "Heavy skills can be scoped down or run with a cheaper model via skill frontmatter.",
+    "zh": "重型技能可通过 skill frontmatter 缩小范围，或改用更便宜的模型运行。"
+  },
+  {
+    "en": "Review what this plugin contributes — its agents, skills, and MCP 工具 all count toward your limit.",
+    "zh": "审视该插件的贡献——它的代理、技能和 MCP 工具都会计入你的额度。"
+  },
+  {
+    "en": "MCP tool results stay in context for the rest of the session. /compact to flush them, or disable servers you don't need.",
+    "zh": "MCP 工具结果会在会话剩余部分留在上下文中。/compact 可清空它们，或停用不需要的服务器。"
+  },
+  {
+    "en": "% of your usage hit a >100k-token cache miss",
+    "zh": "% 的用量命中了超过 100k token 的缓存未命中"
+  },
+  {
+    "en": "% of your usage was at >150k context",
+    "zh": "% 的用量处于 150k 以上上下文"
+  },
+  {
+    "en": "% of your usage came from subagent-heavy sessions",
+    "zh": "% 的用量来自子代理密集的会话"
+  },
+  {
+    "en": "% of your usage was while 4+ sessions ran in parallel",
+    "zh": "% 的用量产生于 4 个以上会话并行运行时"
+  },
+  {
+    "en": "% of your usage came from sessions active for 8+ hours",
+    "zh": "% 的用量来自活跃 8 小时以上的会话"
+  },
+  {
+    "en": "Uncached input is expensive, and often happens when sending a message to a session that has gone idle. /compact before stepping away keeps the cold-start small.",
+    "zh": "未缓存的输入很贵，常发生在给闲置会话发消息时。离开前先 /compact，可把冷启动保持在小规模。"
+  },
+  {
+    "en": "Longer sessions are more expensive even when cached. /compact mid-task, /clear when switching to new tasks.",
+    "zh": "更长的会话即使已缓存也更贵。任务中途用 /compact，切换新任务时用 /clear。"
+  },
+  {
+    "en": "Each subagent runs its own requests. Be deliberate about spawning them — and consider configuring a cheaper model for simpler subagents.",
+    "zh": "每个子代理都会自行发起请求。生成它们时要深思熟虑——并考虑为较简单的子代理配置更便宜的模型。"
+  },
+  {
+    "en": "All sessions share one limit. If you don't need them all at once, queueing uses it more evenly.",
+    "zh": "所有会话共享同一个限额。如果不需要同时运行，排队使用会更均匀。"
+  },
+  {
+    "en": "These are often background/loop sessions. Continuous usage can add up quickly so make sure it is intentional.",
+    "zh": "这些通常是后台/循环会话。持续用量会很快累积，请确保它是你有意为之。"
+  },
+  {
+    "en": "% of your usage came from subagents under \"",
+    "zh": "% 的用量来自子代理「"
+  },
+  {
+    "en": "% of your usage came from /",
+    "zh": "% 的用量来自 /"
+  },
+  {
+    "en": "% of your usage came from plugin \"",
+    "zh": "% 的用量来自插件「"
+  },
+  {
+    "en": "% of your usage came from MCP server \"",
+    "zh": "% 的用量来自 MCP 服务器「"
+  },
+  {
+    "en": " more",
+    "zh": " 个"
+  },
+  {
+    "en": "Sessions:",
+    "zh": "会话："
+  },
+  {
+    "en": "Avg/session:",
+    "zh": "平均/会话："
+  },
+  {
+    "en": " of",
+    "zh": " / 共 "
+  },
+  {
+    "en": " models",
+    "zh": " 个模型"
+  },
+  {
+    "en": "Favorite model",
+    "zh": "最常用模型"
+  },
+  {
+    "en": "Total tokens",
+    "zh": "总 Token"
+  },
+  {
+    "en": "Sessions",
+    "zh": "会话数"
+  },
+  {
+    "en": "Longest session",
+    "zh": "最长会话"
+  },
+  {
+    "en": "Current streak",
+    "zh": "当前连续"
+  },
+  {
+    "en": "Longest streak",
+    "zh": "最长连续"
+  },
+  {
+    "en": "Active days",
+    "zh": "活跃天数"
+  },
+  {
+    "en": "Peak hour",
+    "zh": "高峰时段"
+  },
+  {
+    "en": "Stats from the last ",
+    "zh": "过去 "
+  },
+  {
+    "en": " days",
+    "zh": " 天的统计"
+  },
+  {
+    "en": "Favorite:",
+    "zh": "最常用："
+  },
+  {
+    "en": "Total:",
+    "zh": "总计："
+  },
+  {
+    "en": " tokens",
+    "zh": " Token"
+  },
+  {
+    "en": "Cache read",
+    "zh": "缓存读取"
+  },
+  {
+    "en": "Cache write",
+    "zh": "缓存写入"
+  },
+  {
+    "en": "Cache: ",
+    "zh": "缓存："
+  },
+  {
+    "en": " read \\xB7 ",
+    "zh": " 读取 · "
+  },
+  {
+    "en": " write",
+    "zh": " 写入"
+  },
+  {
+    "en": "Your input and output are ~",
+    "zh": "你的输入输出约为 "
+  },
+  {
+    "en": "x the tokens in ",
+    "zh": " 倍于 "
+  },
+  {
+    "en": "Your input and output are about as many tokens as ",
+    "zh": "你的输入输出量约等于 "
+  },
+  {
+    "en": "Your longest session is ~",
+    "zh": "你的最长会话约为 "
+  },
+  {
+    "en": "x longer than ",
+    "zh": " 倍长于 "
+  },
+  {
+    "en": "copying…",
+    "zh": "正在复制…"
+  },
+  {
+    "en": "copy failed",
+    "zh": "复制失败"
+  },
+  {
+    "en": "Failed to load stats: ",
+    "zh": "加载统计失败："
+  },
+  {
+    "en": "    Less ",
+    "zh": "    更少 "
+  },
+  {
+    "en": " More",
+    "zh": " 更多"
+  },
+  {
+    "en": "The Little Prince",
+    "zh": "《小王子》"
+  },
+  {
+    "en": "The Old Man and the Sea",
+    "zh": "《老人与海》"
+  },
+  {
+    "en": "A Christmas Carol",
+    "zh": "《圣诞颂歌》"
+  },
+  {
+    "en": "Animal Farm",
+    "zh": "《动物农场》"
+  },
+  {
+    "en": "Fahrenheit 451",
+    "zh": "《华氏451》"
+  },
+  {
+    "en": "The Great Gatsby",
+    "zh": "《了不起的盖茨比》"
+  },
+  {
+    "en": "Slaughterhouse-Five",
+    "zh": "《五号屠场》"
+  },
+  {
+    "en": "Brave New World",
+    "zh": "《美丽新世界》"
+  },
+  {
+    "en": "The Catcher in the Rye",
+    "zh": "《麦田里的守望者》"
+  },
+  {
+    "en": "Harry Potter and the Philosopher's Stone",
+    "zh": "《哈利·波特与魔法石》"
+  },
+  {
+    "en": "The Hobbit",
+    "zh": "《霍比特人》"
+  },
+  {
+    "en": "To Kill a Mockingbird",
+    "zh": "《杀死一只知更鸟》"
+  },
+  {
+    "en": "Pride and Prejudice",
+    "zh": "《傲慢与偏见》"
+  },
+  {
+    "en": "Moby-Dick",
+    "zh": "《白鲸》"
+  },
+  {
+    "en": "Crime and Punishment",
+    "zh": "《罪与罚》"
+  },
+  {
+    "en": "A Game of Thrones",
+    "zh": "《权力的游戏》"
+  },
+  {
+    "en": "Anna Karenina",
+    "zh": "《安娜·卡列尼娜》"
+  },
+  {
+    "en": "Don Quixote",
+    "zh": "《堂吉诃德》"
+  },
+  {
+    "en": "The Lord of the Rings",
+    "zh": "《指环王》"
+  },
+  {
+    "en": "The Count of Monte Cristo",
+    "zh": "《基督山伯爵》"
+  },
+  {
+    "en": "Les Mis\\xE9rables",
+    "zh": "《悲惨世界》"
+  },
+  {
+    "en": "War and Peace",
+    "zh": "《战争与和平》"
+  },
+  {
+    "en": "a TED talk",
+    "zh": "一场 TED 演讲"
+  },
+  {
+    "en": "an episode of The Office",
+    "zh": "一集《办公室》"
+  },
+  {
+    "en": "listening to Abbey Road",
+    "zh": "听一遍《Abbey Road》"
+  },
+  {
+    "en": "a yoga class",
+    "zh": "一节瑜伽课"
+  },
+  {
+    "en": "a World Cup soccer match",
+    "zh": "一场世界杯足球赛"
+  },
+  {
+    "en": "a half marathon (average time)",
+    "zh": "一场半程马拉松（平均用时）"
+  },
+  {
+    "en": "the movie Inception",
+    "zh": "电影《盗梦空间》"
+  },
+  {
+    "en": "watching Titanic",
+    "zh": "看一遍《泰坦尼克号》"
+  },
+  {
+    "en": "a transatlantic flight",
+    "zh": "一次跨大西洋飞行"
+  },
+  {
+    "en": "a full night of sleep",
+    "zh": "睡一整晚觉"
+  },
+  {
+    "en": "Failed to load stats",
+    "zh": "统计加载失败"
+  },
+  {
+    "en": "Cache:",
+    "zh": "缓存："
+  },
+  {
+    "en": "Your input and output are ~${Math.floor(s)}x the tokens in ${i.name}",
+    "zh": "你的输入输出约为 ${Math.floor(s)} 倍于 ${i.name} 的 token 量"
+  },
+  {
+    "en": "Your input and output are about as many tokens as ${i.name}",
+    "zh": "你的输入输出量约等于 ${i.name}"
+  },
+  {
+    "en": "Your longest session is ~${Math.floor(s)}x longer than ${i.name}",
+    "zh": "你最长的会话约为 ${Math.floor(s)} 倍长于 ${i.name}"
+  },
+  {
+    "en": "Stats from the last",
+    "zh": "过去 ${e.totalDays} 天的统计"
+  },
+  {
+    "en": "Scroll to feel it \\xB7 ←/→ adjust \\xB7 r reset to auto \\xB7 Enter save \\xB7 Esc cancel",
+    "zh": "滚动感受一下 \\xB7 ←/→ 调整 \\xB7 r 重置为自动 \\xB7 Enter 保存 \\xB7 Esc 取消"
+  },
+  {
+    "en": "Scroll speed",
+    "zh": "滚动速度"
+  },
+  {
+    "en": "Scroll speed unchanged",
+    "zh": "滚动速度未变"
+  },
+  {
+    "en": "Couldn't save scroll speed: ${P.message}",
+    "zh": "无法保存滚动速度: ${P.message}"
+  },
+  {
+    "en": "Scroll speed reset to auto (${i} ${wt(i,\"line\")} per notch) \\xB7 removed from ${R}",
+    "zh": "滚动速度已重置为自动(${i} ${wt(i,\"line\")} 每格) \\xB7 已从 ${R} 移除"
+  },
+  {
+    "en": "Scroll speed set to ${a} ${wt(a,\"line\")} per notch \\xB7 saved to ${R}",
+    "zh": "滚动速度已设为 ${a} ${wt(a,\"line\")} 每格 \\xB7 已保存到 ${R}"
+  },
+  {
+    "en": " per wheel notch",
+    "zh": " 每滚轮格"
+  },
+  {
+    "en": " (auto)",
+    "zh": " (自动)"
+  },
+  {
+    "en": " \\xB7 auto is ",
+    "zh": " \\xB7 自动值为 "
+  },
+  {
+    "en": "high-rate wheel events",
+    "zh": "高频滚轮事件"
+  },
+  {
+    "en": "Windows console",
+    "zh": "Windows 控制台"
+  },
+  {
+    "en": "${t} wheel sensitivity unset \\xB7 /terminal-setup sets it to ${e.recommended}",
+    "zh": "${t} 滚轮灵敏度未设置 \\xB7 /terminal-setup 可设为 ${e.recommended}"
+  },
+  {
+    "en": "${t} wheel sensitivity ${e.sensitivity}",
+    "zh": "${t} 滚轮灵敏度 ${e.sensitivity}"
+  },
+  {
+    "en": "${t} wheel sensitivity ${e.sensitivity} \\xB7 /terminal-setup raises it to ${e.recommended}",
+    "zh": "${t} 滚轮灵敏度 ${e.sensitivity} \\xB7 /terminal-setup 可提升至 ${e.recommended}"
+  },
+  {
+    "en": "←/→ to switch \\xB7 ↑/↓ to 导航 · 按 Enter 选择 · Esc 关闭",
+    "zh": "←/→ 切换 \\xB7 ↑/↓ 导航 · 按 Enter 选择 · Esc 关闭"
+  },
+  {
+    "en": "type to filter \\xB7 ↓/enter 选择 \\xB7 esc 清除",
+    "zh": "输入过滤 \\xB7 ↓/enter 选择 \\xB7 esc 清除"
+  },
+  {
+    "en": "/ to search, ${dmv} to close",
+    "zh": "/ 搜索, ${dmv} 关闭"
+  },
+  {
+    "en": "enter/space to cycle, / to search, ${YGI} to sort, ${dmv} to close",
+    "zh": "enter/space 循环, / 搜索, ${YGI} 排序, ${dmv} 关闭"
+  },
+  {
+    "en": "← or → to set a limit",
+    "zh": "← 或 → 设置限额"
+  },
+  {
+    "en": "← or → 调整 \\xB7 Del to remove limit",
+    "zh": "← 或 → 调整 \\xB7 Del 移除限额"
+  },
+  {
+    "en": "Press ← or → to set a limit.",
+    "zh": "按 ← 或 → 设置限额。"
+  },
+  {
+    "en": "Press → to raise the limit, or Del to remove it.",
+    "zh": "按 → 提高限额,或按 Del 移除。"
+  },
+  {
+    "en": "Adjust monthly spend limit: ${X_i}",
+    "zh": "调整月度支出限额: ${X_i}"
+  },
+  {
+    "en": "Wait for limit to reset",
+    "zh": "等待限额重置"
+  },
+  {
+    "en": "Max 20x",
+    "zh": "最高 20 倍"
+  },
+  {
+    "en": "←/→ to switch \\xB7 ↓ to select \\xB7 Esc 取消",
+    "zh": "←/→ 切换 \\xB7 ↓ 选择 \\xB7 Esc 取消"
+  },
+  {
+    "en": "输入过滤 \\xB7 Enter/↓ to select \\xB7 ↑ to tabs \\xB7 Esc to clear",
+    "zh": "输入过滤 \\xB7 Enter/↓ 选择 \\xB7 ↑ 标签 \\xB7 Esc 清除"
+  },
+  {
+    "en": "Enter to approve \\xB7 r to retry \\xB7 ↑/↓ to 导航 · Esc 取消",
+    "zh": "Enter 批准 \\xB7 r 重试 \\xB7 ↑/↓ 导航 · Esc 取消"
+  },
+  {
+    "en": "↑/↓ to 导航 · 按 Enter 选择 · ←/→ to switch \\xB7 Esc 取消",
+    "zh": "↑/↓ 导航 · 按 Enter 选择 · ←/→ 切换 \\xB7 Esc 取消"
+  },
+  {
+    "en": "Accept terms \\xB7 Help improve our AI models: OFF (for emails with your domain)",
+    "zh": "接受条款 \\xB7 帮助改进我们的 AI 模型: 关(适用于你的域名邮箱)"
+  },
+  {
+    "en": "Accept terms \\xB7 Help improve our AI models: ON",
+    "zh": "接受条款 \\xB7 帮助改进我们的 AI 模型: 开"
+  },
+  {
+    "en": "Accept terms \\xB7 Help improve our AI models: OFF",
+    "zh": "接受条款 \\xB7 帮助改进我们的 AI 模型: 关"
+  },
+  {
+    "en": "Claude-drafted feedback",
+    "zh": "Claude 代写反馈"
+  },
+  {
+    "en": "Artifacts",
+    "zh": "产物"
+  },
+  {
+    "en": "No settings match \"",
+    "zh": "没有匹配的设置 “"
+  },
+  {
+    "en": " more above",
+    "zh": " 条在上方"
+  },
+  {
+    "en": " more below",
+    "zh": " 条在下方"
+  },
+  {
+    "en": " 个 above",
+    "zh": " 条在上方"
+  },
+  {
+    "en": "DontAsk",
+    "zh": "不询问"
+  },
+  {
+    "en": "Press Enter to connect",
+    "zh": "按 Enter 连接"
+  },
+  {
+    "en": "Tab to toggle verbosity",
+    "zh": "Tab 切换详细程度"
+  },
+  {
+    "en": "to toggle verbosity",
+    "zh": "切换详细程度"
   }
 ]
