@@ -574,17 +574,6 @@ if (Test-Path $TmpDir) {
 $rawInput = [Console]::In.ReadToEnd()
 
 $ctxLines = @(
-    "## 中文本地化提示",
-    "",
-    "你正在使用中文本地化版本。请遵循以下规则：",
-    "- 默认使用中文（简体）回复用户",
-    "- 技术术语保留英文（如 API、PR、git、npm、React、TypeScript 等）",
-    "- 使用中文标点符号（，。！？：；「」）",
-    "- 错误信息尽量提供中文解释，附带英文原文",
-    "- 保持简洁直接的风格",
-    "- 代码注释使用中文",
-    "- 日期格式使用 YYYY年MM月DD日",
-    "",
     "## 机器配置保护",
     "- 生成或修改 settings.json、JSON、shell 命令、Hook、statusLine、MCP、权限规则、环境变量或工具参数时，必须优先保证机器可执行。",
     "- 保留 JSON key、枚举值、工具名、命令名、路径、环境变量名、subagent_type、slash command 和 shell 语法原文，不要翻译。",
