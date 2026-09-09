@@ -15,3 +15,9 @@ website-v3/
 # 打包/下载残留，绝不该提交（CI 检查会拦截）
 pack-staging/
 *.tgz
+
+# 本机 patch 状态(install.sh / session-start 会写).patched-version 等
+# 不该进源码;落在源码目录会让管家 update 误判「有没保存的改动」而拒拉
+plugin/.patched-version
+plugin/.last-update-check
+plugin/.settings-overlay-cache.json
