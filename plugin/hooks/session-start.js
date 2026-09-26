@@ -49,7 +49,11 @@ function main() {
         ["pwsh.exe", ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", path.join(hooksDir, "session-start.ps1")]],
         ["powershell.exe", ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", path.join(hooksDir, "session-start.ps1")]],
       ]
-    : [["/bin/bash", [path.join(hooksDir, "session-start")]]];
+    : [
+        // Termux「安卓终端」没有 /bin/bash(/bin -> /system/bin),先走 PATH 再退回绝对路径
+        ["bash", [path.join(hooksDir, "session-start")]],
+        ["/bin/bash", [path.join(hooksDir, "session-start")]],
+      ];
 
   for (const [command, args] of candidates) {
     const result = runCandidate(command, args, input, childEnv);

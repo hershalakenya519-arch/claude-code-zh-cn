@@ -1,0 +1,74 @@
+// 接上去的后台会话:两下 Ctrl+C 直接退出 CC,不再先落回会话总览(2026-09-22 主人要的)
+// 用法: node patch-exit.js <二进制>      (一键汉化.sh 在 patch-zh.js 之后自动调)
+//
+// ▍原版为什么要退两轮
+//   后台会话里按两下 Ctrl+C(requestExit)跟按 ← 走的是同一个脱离函数 WK(),
+//   外层总览收到「脱离」分不出是哪个键,一律回列表。
+// ▍改三处(都是原地等长替换,短出来的补空格)
+//   ① requestExit:后台会话里先 WK(1) 发「要退出」的暗号,再照前台会话的路正常收工
+//      ⇒ 会话真结束,不留一个闲着的后台进程吃运行内存;← 还走 WK(),不受影响
+//   ② WK:收到 1 就把脱离消息写成 EKICKED:bye
+//      · `claude attach` 那条路:消息以 E大写: 打头 ⇒ 不再重开会话总览,直接回终端
+//      · 总览里那条路:EKICKED: 被剥掉,剩 bye 交给 ③
+//   ③ 总览主循环:接会话回来收到 bye ⇒ 跳出循环 = 跟总览里按两下 Ctrl+C 一样退出
+// ▍🔴 只改源码不算数:这版每个模块都带预编译字节码,CC 跑字节码。
+//   实测把单个模块的字节码长度清零,CC 就改读源码,不崩(09-22 拿「exit」改成「EXIT」验过)。
+//   所以改到的模块一律把字节码摘掉。
+const L = require(process.env.TMPDIR + "/biolib.js");
+const fs = require("fs");
+const bin = process.argv[2];
+if (!bin) { console.error("用法: node patch-exit.js <二进制>"); process.exit(2); }
+
+const P = [
+  ["后台会话按 Ctrl+C 退出:发暗号再收工",
+   'requestExit=()=>{let{onDetachToCaller:h}=this.#r;if(h){h();return}if(Tt()){WK();return}',
+   'requestExit=()=>{let{onDetachToCaller:h}=this.#r;if(h){h();return}if(Tt())WK(1);'],
+  ["脱离函数认暗号",
+   'function WK(h){if(!AX())return;let v=ZCr();if(H7({type:"detach-request",msg:v,broadcast:h?.broadcast})){sit();return}process.stdout.write(Q4(v)),sit()}',
+   // v 挪进参数表省下「let 」4 个字节才放得下;调用方最多传一个参数,v 永远是自己算的
+   'function WK(h,v){if(!AX())return;v=h>0?"EKICKED:bye":ZCr();H7({type:"detach-request",msg:v,broadcast:h?.broadcast})||process.stdout.write(Q4(v)),sit()}'],
+  ["总览收到暗号就退出",
+   'else{if(Ae.msg)Ie.setError(Ae.msg);_("fleet_view_open")}Fr("detach",fe.job.state,{attachDurationMs:Date.now()-Ce}),t(`[FV-attach] attachJob returned after ${Date.now()-Le}ms \\u2014 remounting list`)}',
+   'else{if(Ae.msg=="bye")break;if(Ae.msg)Ie.setError(Ae.msg);_("fleet_view_open")}Fr("detach",fe.job.state,{attachDurationMs:Date.now()-Ce}),t(`[FV-attach] attach returned ${Date.now()-Le}ms`)}'],
+];
+
+const data = fs.readFileSync(bin);
+const hits = [];
+let bad = 0;
+for (const [what, oldS, newS] of P) {
+  const ob = Buffer.from(oldS, "utf8"), nb = Buffer.from(newS, "utf8");
+  if (nb.length > ob.length) { console.error(`✘ ${what}:新写法比原文长,放不下`); bad++; continue; }
+  const pad = Buffer.concat([nb, Buffer.alloc(ob.length - nb.length, 0x20)]);
+  const n = countOf(data, ob), done = countOf(data, pad);
+  if (n === 1) { const i = data.indexOf(ob); pad.copy(data, i); hits.push(i); console.log(`✔ ${what}`); }
+  else if (n === 0 && done === 1) { hits.push(data.indexOf(pad)); console.log(`· ${what}:早就改过了`); }
+  else { console.error(`✘ ${what}:原文出现 ${n} 处(要恰好 1 处)—— CC 版本变了,这份补丁不能用`); bad++; }
+}
+if (bad) { console.error("有地方没对上,一处都不写,原文件没动"); process.exit(1); }
+fs.writeFileSync(bin, data);
+
+// 改到的模块摘掉字节码(模块结构里 bytecode 是第 4 个指针:偏移 24,长度在 +4)
+const e = L.extractFromELFFile(bin);
+const base = e.section.offset + e.sectionHeaderSize;
+const list = L.getStringPointerContent(e.bunData, e.bunOffsets.modulesPtr);
+const count = list.length / e.moduleStructSize;
+const fd = fs.openSync(bin, "r+");
+const seen = new Set();
+for (const h of hits) {
+  const off = h - base;
+  for (let i = 0; i < count; i++) {
+    const m = L.parseCompiledModule(list, i * e.moduleStructSize, e.moduleStructSize);
+    if (!(m.contents && off >= m.contents.offset && off < m.contents.offset + m.contents.length)) continue;
+    if (seen.has(i)) break;
+    seen.add(i);
+    const name = L.getStringPointerContent(e.bunData, m.name).toString();
+    if (m.bytecode.length === 0) { console.log(`· ${name} 早就没有字节码了`); break; }
+    fs.writeSync(fd, Buffer.alloc(4), 0, 4, base + e.bunOffsets.modulesPtr.offset + i * e.moduleStructSize + 24 + 4);
+    console.log(`✔ ${name} 摘掉字节码(${(m.bytecode.length / 1048576).toFixed(1)}MB),改读源码`);
+    break;
+  }
+}
+fs.closeSync(fd);
+if (seen.size !== 2) { console.error(`✘ 应该落在 2 个模块里,实际 ${seen.size} 个 —— 先别装`); process.exit(1); }
+
+function countOf(buf, needle) { let n = 0, i = buf.indexOf(needle); while (i !== -1) { n++; i = buf.indexOf(needle, i + 1); } return n; }
